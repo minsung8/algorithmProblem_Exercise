@@ -17,7 +17,6 @@ public class Boj2 {
 		}else {
 			System.out.println((a / (c - b)) + 1);
 		}
-			
+		sc.close();
 	}
-
 }
