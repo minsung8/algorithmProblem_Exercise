@@ -48,7 +48,7 @@ public class Boj2 {
 		System.out.println(arr[(int)(num / 2)]);
 		if (list.size() == 1) {
 			System.out.println(list.get(0));
-		} else {
+		} else {	
 			System.out.println(list.get(1));
 		}
 		System.out.println(arr[num - 1] - arr[0]);
