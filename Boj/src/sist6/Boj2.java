@@ -16,7 +16,7 @@ public class Boj2 {
 				arr[i][j] = sc.nextInt();
 			}
 		}
-		
+	
 		for(int i=1; i<arr.length; i++) {
 			for(int j=0; j<3; j++) {
 				if(j==0) {
@@ -28,15 +28,13 @@ public class Boj2 {
 				}
 			}
 		}
-		int answer = 10000;
+		int answer = arr[num-1][0];
 		
 		for (int i=0; i<3; i++) {
 			if(answer > arr[num-1][i]) {
 				answer = arr[num-1][i];
 			}
 		}
-		System.out.println(answer);
-			
+		System.out.println(answer);		
 	}
-
 }
