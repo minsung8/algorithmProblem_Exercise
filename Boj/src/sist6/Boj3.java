@@ -26,7 +26,6 @@ public class Boj3 {
 				}
 			}
 		}
-		System.out.println(Arrays.toString(arr));
 		dp[0] = 1;
 		for (int i=1; i<num; i++) {
 			dp[i] = 1;
