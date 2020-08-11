@@ -83,7 +83,6 @@ public class Boj5 {
 		
 		boolean[] visited = new boolean[vertex + 1];
 		
-		
 		queue.add(new Node(start, 0));
 		
 		while (!queue.isEmpty()) {
