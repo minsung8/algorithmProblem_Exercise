@@ -1,3 +1,6 @@
+# 프로그래머스 : https://programmers.co.kr/learn/courses/30/lessons/60063
+
+
 visited = [[[1, 1], [1, 2]]]
 def solution(board):
 
