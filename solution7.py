@@ -1,23 +1,21 @@
 # 출처 : https://programmers.co.kr/learn/courses/30/lessons/64063
 
-from collections import defaultdict
+import sys
+sys.setrecursionlimit(10000)
+
+def find(n, dic):
+    if n not in dic:
+        dic[n] = n + 1
+        return n
+
+    answer = find(dic[n], dic)
+    dic[n] = answer + 1
+    return answer
 
 def solution(k, room_number):
-    pos = {}
-    visit = defaultdict(int)
-    answer = [0] * (len(room_number) + 1)
-    for i in range(1, len(room_number) + 1):
-        if answer[i] == 0 and visit[room_number[i - 1]] == 0:
-            answer[i] = room_number[i - 1]
-            visit[room_number[i - 1]] = 1
-        else:
-            temp = room_number[i - 1]
-            while True:
-                temp += 1
-                if visit[temp] == 0:
-                    answer[i] = temp
-                    visit[temp] = 1
-                    break
-    return answer[1:]
-
-print(solution(10, [1, 3, 4, 1, 3, 1]))
+    answer = []
+    dic = dict()
+    for n in room_number:
+        temp = find(n, dic)
+        answer.append(temp)
+    return answer
