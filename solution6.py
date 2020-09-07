@@ -1,45 +1,51 @@
-# 프로그래머스 : https://programmers.co.kr/learn/courses/30/lessons/60060
-
 import os
 import sys
 
 from collections import defaultdict
 
-class Trie:
-
+class Tree:
     def __init__(self):
-        self.root = {} # chr|visited
+        self.root = {}
 
-    def insert(self, s):
+    def create(self,  word):
         cur = self.root
-        while s:
-            if s[0] not in cur: cur[s[0]] = [ {} , 0 ]
-            cur[s[0]][1] += 1
-            cur = cur[s[0]][0]
-            s = s[1:]
+        for w in word:
+            if w not in cur:
+                cur[w] = [{}, 0]
+            cur[w][1] += 1
+            cur = cur[w][0]
 
-
-    def find(self, s)->int:
-        cur = self.root; pre_v = 0
-        while s:
-            if s[0] == '?': return pre_v
+    def search(self, query):
+        cnt = 0
+        cur = self.root
+        for q in query:
+            if q == "?":
+                return cnt
+            elif q in cur.keys():
+                cnt = cur[q][1]
             else:
-                if s[0] not in cur: return 0
-                pre_v = cur[s[0]][1]; cur = cur[s[0]][0]
-            s = s[1:]
-
-        return pre_v
+                return 0
+            cur = cur[q][0]
 
 def solution(words, queries):
-    prefix_dict = defaultdict(Trie)
-    result = []
+    dic = defaultdict(Tree)
+    re_dic = defaultdict(Tree)
+    len_dict = defaultdict(int)
+    answer = []
 
     for word in words:
-        prefix_dict[len(word)].insert(word)
+        dic[len(word)].create(word)
+        re_dic[len(word)].create(word[::-1])
+        len_dict[len(word)] += 1
 
-    for q in queries:
-        result.append(prefix_dict[len(q)].find(q))
+    for query in queries:
+        if query[0] == "?" and query[-1] == "?":
+            answer.append(len_dict[len(query)])
+        elif query[0] != "?":
+            answer.append(dic[len(query)].search(query))
+        else:
+            answer.append(re_dic[len(query)].search(query[::-1]))
 
-    return result
+    return answer
 
-print(solution(["frodo", "front", "frost", "frozen", "frame", "kakao"], ["fro??", "????o", "fr???", "fro???", "pro?"]))
+print(solution(["frodo", "front", "frost", "frozen", "frame", "kakao"], ["fro??", "????o", "fr???", "fro???", "pro?", "?????", "fro??"]))
