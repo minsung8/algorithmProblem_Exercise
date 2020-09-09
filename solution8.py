@@ -1,35 +1,32 @@
 # 출처 : https://programmers.co.kr/learn/courses/30/lessons/42891
 
-import sys
-sys.setrecursionlimit(5000)
 def solution(food_times, k):
+
+    if sum(food_times) <= k: return -1
+    temp_list = []
+    for i in range(len(food_times)):
+        temp_list.append([i, food_times[i]])
+    temp_list = sorted(temp_list, key=lambda x: x[1])
+
     idx = 0
-    cnt = 0
-    dic = {}
-    while cnt < k:
-        if food_times[idx] != 0:
-            food_times[idx] -= 1
-            cnt += 1
+    total = 0
+    temp = []
+    if k > len(temp_list):
+        while k > len(temp_list):
+            temp = temp_list.pop(0)
+            idx = temp[0]
+            total = temp[1] - total
 
-        idx = next_idx(idx, food_times, dic)
+            if k - (total * (len(temp_list) + 1)) > 0:
+                k -= total * (len(temp_list) + 1)
+            else:
+                if k > len(temp_list) + 1:
+                    k -= (k // (len(temp_list) + 1)) * (len(temp_list) + 1)
+                    return k + 1
+                break
 
-        if idx == -1: return -1
-    if food_times[idx] != 0: return idx + 1
-
-    return next_idx(idx, food_times, dic)
-
-def next_idx(idx, food_times, dic):
-    if len(dic) == len(food_times): return -1
-    answer = idx + 1
-    if answer == len(food_times): answer = 0
-
-    if food_times[answer] != 0: return answer
-    else:
-        dic[answer] = answer + 1
-        dic[answer] = next_idx(answer, food_times, dic)
-        return dic[answer]
-
-print(solution([3, 1, 2], 6))
+        temp_list = [temp] + temp_list
+    return temp_list[k - 1][0] + 1
 
 
 
