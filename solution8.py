@@ -1,33 +1,24 @@
 # 출처 : https://programmers.co.kr/learn/courses/30/lessons/42891
 
+import heapq
+
 def solution(food_times, k):
 
     if sum(food_times) <= k: return -1
-    temp_list = []
-    for i in range(len(food_times)):
-        temp_list.append([i, food_times[i]])
-    temp_list = sorted(temp_list, key=lambda x: x[1])
 
-    idx = 0
-    total = 0
-    temp = []
-    if k > len(temp_list):
-        while k > len(temp_list):
-            temp = temp_list.pop(0)
-            idx = temp[0]
-            total = temp[1] - total
+    if k < len(food_times):
+        return k + 1
 
-            if k - (total * (len(temp_list) + 1)) > 0:
-                k -= total * (len(temp_list) + 1)
-            else:
-                if k > len(temp_list) + 1:
-                    k -= (k // (len(temp_list) + 1)) * (len(temp_list) + 1)
-                    return k + 1
-                break
+    food_times = [(food, idx) for idx, food in enumerate(food_times, 1)]
+    heapq.heapify(food_times)
 
-        temp_list = [temp] + temp_list
-    return temp_list[k - 1][0] + 1
+    small_food = food_times[0][0]
+    prev = 0
+    while k - ((small_food - prev) * len(food_times)) >= 0:
+        k -= (small_food - prev) * len(food_times)
+        prev, index = heapq.heappop(food_times)
+        small_food = food_times[0][0]
 
+    food_times = sorted(food_times, key=lambda x: x[1])
 
-
-
+    return food_times[k % len(food_times)][1]
