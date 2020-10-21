@@ -1,28 +1,9 @@
-import math
+from math import inf
 import os
 import random
 import re
 import sys
 from collections import defaultdict
-
-def check(x, y, dic):
-    answer = []
-
-    temp = [[x, 0]]
-
-    while temp:
-
-        start = temp.pop(0)
-
-        if start[0] == y:
-            answer.append(start[1])
-            continue
-
-        for a in dic[start[0]]:
-            if a[0] != x:
-                temp.append([a[0], start[1] + a[1]])
-
-    return answer
 
 if __name__ == '__main__':
     road_nodes, road_edges = map(int, input().split())
@@ -34,16 +15,22 @@ if __name__ == '__main__':
     for i in range(road_edges):
         road_from[i], road_to[i], road_weight[i] = map(int, input().split())
 
-    dic = defaultdict(list)
+    q = int(input())
+    dp = [[inf for i in range(road_edges)] for j in range(road_edges)]
 
     for i in range(len(road_from)):
-        dic[road_from[i]].append([road_to[i], road_weight[i]])
-    q = int(input())
+        dp[road_from[i] - 1][road_to[i] - 1] = road_weight[i]
+
+    for k in range(road_edges):
+        for i in range(road_edges):
+            for j in range(road_edges):
+                dp[i][j] = min(dp[i][j], dp[i][k] + dp[k][j])
+                if i == j: dp[i][j] = 0
+
     for q_itr in range(q):
         xy = input().split()
         x = int(xy[0])
         y = int(xy[1])
-        cost_list = check(int(x), int(y), dic)
-
-        if len(cost_list) == 0: print(-1)
-        else: print(min(cost_list))
+        answer = dp[x - 1][y - 1]
+        if answer == inf: print(-1)
+        else: print(answer)
