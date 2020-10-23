@@ -15,22 +15,56 @@ if __name__ == '__main__':
     for i in range(road_edges):
         road_from[i], road_to[i], road_weight[i] = map(int, input().split())
 
-    q = int(input())
-    dp = [[inf for i in range(road_edges)] for j in range(road_edges)]
+    edge = defaultdict(list)
 
     for i in range(len(road_from)):
-        dp[road_from[i] - 1][road_to[i] - 1] = road_weight[i]
+        edge[road_from[i]].append([road_to[i], road_weight[i]])
 
-    for k in range(road_edges):
-        for i in range(road_edges):
-            for j in range(road_edges):
-                dp[i][j] = min(dp[i][j], dp[i][k] + dp[k][j])
-                if i == j: dp[i][j] = 0
+    questions = [
+        tuple(int(x) for x in input().strip().split())
+        for _ in range(int(input()))
+    ]
 
-    for q_itr in range(q):
-        xy = input().split()
-        x = int(xy[0])
-        y = int(xy[1])
-        answer = dp[x - 1][y - 1]
+    questions_dict = dict()
+    for fr, to in questions:
+        if fr not in questions_dict:
+            questions_dict[fr] = {to}
+        else:
+            questions_dict[fr].add(to)
+    answer_dic = dict()
+    for i in questions_dict.keys():
+        dists = [inf] * (road_nodes + 1)
+        dists[i] = 0
+        visited = [i]
+        while visited:
+            next_visited = set()
+
+            for node in visited:
+                temp_cost = dists[node]
+                for node_cost in edge[node]:
+                    temp_cost2 = node_cost[1] + temp_cost
+
+                    if dists[node_cost[0]] == inf or dists[node_cost[0]] > temp_cost2:
+                        dists[node_cost[0]] = temp_cost2
+                        next_visited.add(node_cost[0])
+            visited = next_visited
+
+        answer_dic[i] = dists
+
+    for start, end in questions:
+        answer = answer_dic[start][end]
         if answer == inf: print(-1)
         else: print(answer)
+
+
+
+
+
+
+
+
+
+
+
+
+
