@@ -1,70 +1,58 @@
-from math import inf
-import os
-import random
-import re
-import sys
-from collections import defaultdict
+n, m = tuple(int(x) for x in input().strip().split())
+edges = {}
 
-if __name__ == '__main__':
-    road_nodes, road_edges = map(int, input().split())
+for i in range(1, n + 1):
+    edges[i] = []
 
-    road_from = [0] * road_edges
-    road_to = [0] * road_edges
-    road_weight = [0] * road_edges
 
-    for i in range(road_edges):
-        road_from[i], road_to[i], road_weight[i] = map(int, input().split())
+for _ in range(m):
+    f, t, r = tuple(int(x) for x in input().strip().split())
+    try:
+        idx = next(i for i,(to,_) in enumerate(edges[f]) if to == t)
+        edges[f][idx] = [t, r]
+    except StopIteration:
+        edges[f].append([t, r])
 
-    edge = defaultdict(list)
-
-    for i in range(len(road_from)):
-        edge[road_from[i]].append([road_to[i], road_weight[i]])
-
-    questions = [
-        tuple(int(x) for x in input().strip().split())
+question = [
+    tuple(int(x) for x in input().strip().split())
         for _ in range(int(input()))
-    ]
+]
 
-    questions_dict = dict()
-    for fr, to in questions:
-        if fr not in questions_dict:
-            questions_dict[fr] = {to}
-        else:
-            questions_dict[fr].add(to)
-    answer_dic = dict()
-    for i in questions_dict.keys():
-        dists = [inf] * (road_nodes + 1)
-        dists[i] = 0
-        visited = [i]
-        while visited:
-            next_visited = set()
+questions_dict = {}
 
-            for node in visited:
-                temp_cost = dists[node]
-                for node_cost in edge[node]:
-                    temp_cost2 = node_cost[1] + temp_cost
+for xy_list in question:
+    if xy_list[0] not in questions_dict:
+        questions_dict[xy_list[0]] = [xy_list[1]]
+    else:
+        questions_dict[xy_list[0]].append(xy_list[1])
 
-                    if dists[node_cost[0]] == inf or dists[node_cost[0]] > temp_cost2:
-                        dists[node_cost[0]] = temp_cost2
-                        next_visited.add(node_cost[0])
-            visited = next_visited
+answer = {}
+for start, ends in questions_dict.items():
 
-        answer_dic[i] = dists
+    visited = [start]
+    dist = {node: -1 for node in range(1, n+1)}
+    dist[start] = 0
 
-    for start, end in questions:
-        answer = answer_dic[start][end]
-        if answer == inf: print(-1)
-        else: print(answer)
+    while visited:
 
+        next_visited = set()
 
+        for node in visited:
 
+            cur_cost = dist[node]
 
+            for node_cost in edges[node]:
 
+                next_cost = cur_cost + node_cost[1]
 
+                if dist[node_cost[0]] == -1 or next_cost < dist[node_cost[0]]:
+                    dist[node_cost[0]] = next_cost
+                    next_visited.add(node_cost[0])
 
+        visited = next_visited
 
+    for end in ends:
+        answer[(start, end)] = dist[end]
 
-
-
-
-
+for start, end in question:
+    print(answer[(start, end)])
