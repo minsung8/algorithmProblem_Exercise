@@ -8,42 +8,31 @@ def matrixRotation(matrix, rotate_cnt, m, n):
 
     num_rings = min(m, n) // 2
 
-    if rotate_cnt >= ((n + m) * 2) - 4:
-        rotate_cnt = rotate_cnt % (((n + m) * 2) - 4)
+    for i in range(num_rings):
 
-    for cnt in range(rotate_cnt):
+        temp_rotate_cnt = rotate_cnt % (2 * (m + n - 4 * i) - 4)
 
-        start_n = 0  # 가로
-        start_m = 0  # 세로
+        for cnt in range(temp_rotate_cnt):
 
-        for i in range(num_rings):
+            for j in range(i, n - i - 1):
+                tmp = matrix[i][j]
+                matrix[i][j] = matrix[i][j + 1]
+                matrix[i][j + 1] = tmp
 
-            # top
-            for k in range(start_n, n - start_n - 1):
-                temp = matrix[start_n][k]
-                matrix[start_n][k] = matrix[start_n][k + 1]
-                matrix[start_n][k + 1] = temp
+            for j in range(i, m - i - 1):
+                tmp = matrix[j][n - i - 1]
+                matrix[j][n - i - 1] = matrix[j + 1][n - i - 1]
+                matrix[j + 1][n - i - 1] = tmp
 
-            # right
-            for k in range(start_m, m - start_m - 1):
-                temp = matrix[k][n - start_n - 1]
-                matrix[k][n - start_n - 1] = matrix[k + 1][n - start_n - 1]
-                matrix[k + 1][n - start_n - 1] = temp
+            for j in range(n - i - 1, i, -1):
+                tmp = matrix[m - i - 1][j]
+                matrix[m - i - 1][j] = matrix[m - i - 1][j - 1]
+                matrix[m - i - 1][j - 1] = tmp
 
-            # bottom
-            for k in range(n - start_n - 1, start_n, -1):
-                temp = matrix[m - start_m - 1][k]
-                matrix[m - start_m - 1][k] = matrix[m - start_m - 1][k - 1]
-                matrix[m - start_m - 1][k - 1] = temp
-
-            # left
-            for k in range(m - start_m - 1, start_m + 1, -1):
-                temp = matrix[k][start_n]
-                matrix[k][start_n] = matrix[k - 1][start_n]
-                matrix[k - 1][start_n] = temp
-
-            start_n += 1
-            start_m += 1
+            for j in range(m - i - 1, i + 1, -1):
+                tmp = matrix[j][i]
+                matrix[j][i] = matrix[j - 1][i]
+                matrix[j - 1][i] = tmp
 
     return matrix
 
