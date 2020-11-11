@@ -1,3 +1,4 @@
+
 # K Factorization
 
 #!/bin/python3
@@ -9,27 +10,42 @@ import re
 import sys
 
 # Complete the kFactorization function below.
+from collections import defaultdict
+
 def kFactorization(n, A):
 
-    temp = []
+    A_copy = A.copy()
+    answer = -1
+    while A_copy:
 
-    for i in A:
-        temp.append([[i], n - i])
+        temp = A_copy.pop(0)
+        temp_list = []
+        for x in A:
 
-    while temp:
+            if x != temp:
+                temp_list.append([temp * x, [temp, x]])
+        answer = bfs(temp_list, n, A)
 
-        start = temp.pop(0)
-
-        if start[1] == 0: return start[0]
-        if start[1] < 0: continue
-
-        for i in A:
-            if i not in start[0]:
-                temp_list = start[0] + [i]
-                temp.append([temp_list, start[1] - (i * start[1])])
+        if answer: return answer
 
     return -1
 
+def bfs(temp_list, n, A):
+
+    result = []
+    for temp in temp_list:
+
+        if temp[0] == n: return temp
+
+        for x in A:
+
+            if x not in temp[1] and x * temp[0] <= n:
+
+                result.append([temp[0] * x, temp[1] + [x]])
+
+    if len(result) > 0: return bfs(result, n, A)
+
+    return
 
 if __name__ == '__main__':
 
@@ -42,5 +58,11 @@ if __name__ == '__main__':
     A = list(map(int, input().rstrip().split()))
 
     result = kFactorization(n, A)
-    print(result)
-
+    if result == -1: print(-1)
+    else:
+        temp = 1
+        answer = "1 "
+        for x in result[1]:
+            temp *= x
+            answer += str(temp) + " "
+        print(answer)
