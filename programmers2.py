@@ -11,38 +11,44 @@ def solution(a):
         else:
             freq[i] += 1
     
+    most_freq1 = sorted(freq.items(), key=lambda x: -x[1])[0][0]
+    second_freq = sorted(freq.items(), key=lambda x: -x[1])[1][0]     
     answer_list = []
-    temp = []
-    
-    most_freq = sorted(freq.items(), key=lambda x: -x[1])[0][0]
 
-    for i in range(len(a)):
-        
-        temp.append(a[i])
+    freq_list = [most_freq1, second_freq]
 
-        if len(temp) == 2:
+    while freq_list:
 
-            if most_freq in temp:
+        most_freq = freq_list.pop()
 
-                if temp[0] != temp[1]:
-                    answer_list.append(temp)
-                    temp = []
+        temp_list = []
+        temp = []
+
+        for i in range(len(a)):
+            
+            temp.append(a[i])
+
+            if len(temp) == 2:
+
+                if most_freq in temp:
+
+                    if temp[0] != temp[1]:
+                        temp_list.append(temp)
+                        temp = []
+                    else:
+                        temp.pop()
+                
                 else:
                     temp.pop()
-            
-            else:
-                temp.pop()
-    
-    if len(answer_list) < 2:
-        return 0
+        if len(temp_list) < 2:
+            answer_list.append(0)
+            continue
 
-    return len(answer_list) * 2
+        answer_list.append(len(temp_list) * 2)
 
-print(solution([0,3,3,0,7,0,2,0]))
-print(solution([5,2,3,3,5,3]))
-print(solution([0, 1, 2, 1]))
+    return max(answer_list)
 
-print(solution([5,2,3,3,5,3,7]))
+print(solution([1, 2, 3, 2]))
 
     
 
