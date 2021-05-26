@@ -1,30 +1,27 @@
 def solution(n_list):
+    
+    x = 0
+    y = 1
 
-    temp_list = sorted(n_list, key=lambda x:  int(str(x)[0]), reverse=True)
-
-    temp_idx = 0
-    while temp_idx < len(temp_list) - 1:
+    while True:
+        if int(str(n_list[x]) + str(n_list[y])) < int(str(n_list[y]) + str(n_list[x])):
+            temp = n_list[y]
+            n_list[y] = n_list[x]
+            n_list[x] = temp
         
-        if str(temp_list[temp_idx])[0] == str(temp_list[temp_idx + 1])[0]:
+        y += 1
 
-            if len(str(temp_list[temp_idx])) == len(str(temp_list[temp_idx + 1])) and temp_list[temp_idx] < temp_list[temp_idx + 1]:
-                temp = temp_list[temp_idx]
-                temp_list[temp_idx] = temp_list[temp_idx + 1]
-                temp_list[temp_idx + 1] = temp
-                temp_idx += 1
-            else:
-                temp2 = str(temp_list[temp_idx])[0] * len(str(temp_list[temp_idx + 1])[0])
+        if y == len(n_list):
+            x += 1
+            y = x + 1
+        
+        if x == len(n_list) - 1:
+            break
 
-                if int(temp2) < temp_list[temp_idx + 1]:
-                    temp = temp_list[temp_idx]
-                    temp_list[temp_idx] = temp_list[temp_idx + 1]
-                    temp_list[temp_idx + 1] = temp
-                    temp_idx += 1
-
-        else:
-            temp_idx += 1
-                
-
-    return temp_list
+    answer = ''
+    for i in n_list:
+        answer += str(i)
+    return answer
 
 print(solution([3, 30, 34, 5, 9]))
+print(solution([10, 2]))
