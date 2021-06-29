@@ -1,27 +1,42 @@
 from itertools import combinations
 
 def solution(orders, course):
-
-    answer_dic = {}
+    all_menu = ''
+    for order in orders:
+        all_menu += order
+    all_menu = list(set(all_menu))
+    
+    answer = []
 
     for i in course:
-        temp_list = []
-        for order in orders:
-            temp = list(combinations(order, i))
-            temp_list.append(temp)
+        coms = list(combinations(all_menu, i))
+        for com in coms:
+            com = sorted(list(com))
+            temp = "".join(com)
+            temp_cnt = 0
+            for order in orders:
+                if len(set(temp + order)) == len(order):
+                    temp_cnt += 1
+
+            if temp_cnt > 1:
+                answer.append([temp, temp_cnt])
+    answer = sorted(answer, key=lambda x : (len(x[0]), -x[1]))
+
+    result = []
+    for i in range(len(answer)):
         
-        for j in range(len(temp_list) - 1):
-            for k in range(len(temp_list[j])):
+        if len(result) == 0:
+            result.append(answer[i][0])
+            temp = answer[i][1]
+        
+        elif len(answer[i][0]) == len(result[-1]) and temp == answer[i][1]:
+            result.append(answer[i][0])
+        
+        elif len(result[-1]) < len(answer[i][0]):
+            result.append(answer[i][0])
+            temp = answer[i][1]
+    return sorted(result)
 
-                for l in range(j, len(temp_list)):
-                    if temp_list[j][k] in temp_list[l]:
-
-                        if temp_list[j][k] in answer_dic:
-                            answer_dic[temp_list[j][k]] += 1
-                        else:
-                            answer_dic[temp_list[j][k]] = 1
-
-    return answer_dic 
 
 print(solution(["ABCFG", "AC", "CDE", "ACDE", "BCFG", "ACDEH"], [2,3,4]))
 #print(solution(["ABCDE", "AB", "CD", "ADE", "XYZ", "XYZ", "ACD"], [2,3,5]))
