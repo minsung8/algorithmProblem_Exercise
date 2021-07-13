@@ -1,35 +1,30 @@
-answer = []
+result = []
 
 def solution(s):
-    
-    for i in range(len(s)):
-        
-        if s[i] in ['*', '-', '+']:
-            left = s[:i]
-            right = s[i + 1:]
-        
-            left_list = dfs(left)
-            right_list = dfs(right)
-            print(left_list, right_list)
 
-    return answer
+    dfs(s)
 
+    return result
 
 def dfs(s):
-
-    answer = []
-
     if s.isnumeric():
-        return [s]
+        return s
+
+    global result
 
     for i in range(len(s)):
         if s[i] in '*-+':
-            answer.append(eval( str(eval(s[i:])) + s[i] + str(eval(s[i+1:])) ))
+            print(s[:i], s[i], s[i+1:], result)
+            print(eval(dfs(s[:i]) + s[i] + dfs(s[i+1:])) )
+            result.append( eval(dfs(s[:i]) + s[i] + dfs(s[i+1:])) )
+            print(result)
 
-    return answer
+    return
 
 
-print(solution('3-4'))
-print(solution("2-1-1"))
-#print(solution("2*3-4*5"))
+
+
+#print(solution('3-4'))
+#print(solution("2-1-1"))
+print(solution("2*3-4*5"))
 #print(solution("2*3-4*5+3*12"))
