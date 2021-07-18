@@ -4,23 +4,26 @@ def solution(numbers):
     answer = []
 
     for number in numbers:
-        temp = list(binToString(number))[::-1]
+        temp = number
+        start = number + 1
 
-        if '0' in temp:
-            temp_idx = temp.index('0')
-            temp[temp_idx] = '1'
-            temp2 = "0b"+ "".join(temp)
-            answer.append(int(temp2,  2))
+        if temp % 2 == 0:
+            answer.append(temp + 1)
+        
+        elif '0' not in bin(temp)[2:]:
+            temp2 = ['1', '0'] + list(bin(temp)[3:])
+            answer.append(int('0b' + "".join(temp2), 2))
+        
         else:
-            temp3 = ['1', '0'] + temp[1:]
-            temp4 = "0b"+ "".join(temp3)
-            answer.append(int(temp4,  2))
+            while True:
+                if check(temp, start).count('1') == 1 or  check(temp, start).count('1') == 2:
+                    answer.append(start)
+                    break
+                start += 1
 
     return answer
 
-def binToString(i):
-    print(bin(i))
-    return bin(i)[2:]
+def check(a, b):
+    return bin(a ^ b)
 
-print(solution([3]))
-
+print(solution([7]))
