@@ -15,15 +15,13 @@ def solution(numbers):
             answer.append(int('0b' + "".join(temp2), 2))
         
         else:
-            while True:
-                if check(temp, start).count('1') == 1 or  check(temp, start).count('1') == 2:
-                    answer.append(start)
-                    break
-                start += 1
-
+            reverse_temp2 = list(reversed(bin(temp)[2:]))
+            zero_idx = reverse_temp2.index('0') + 1
+            temp2 = list(bin(temp)[2:])
+            temp2[-zero_idx] = '1'
+            temp2[-zero_idx + 1] = '0'
+            answer.append(int('0b' + ''.join(temp2), 2))
     return answer
 
-def check(a, b):
-    return bin(a ^ b)
 
-print(solution([7]))
+print(solution([11]))
