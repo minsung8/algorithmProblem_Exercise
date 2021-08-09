@@ -14,14 +14,13 @@ def solution(n, s, a, b, fares):
         else:
             cost_dic[fares[i][1]][fares[i][0]] = fares[i][2]
 
+    for i in range(1, n + 1):
+        for j in range(1, n + 1):
+            if i != j or j not in cost_dic[i].keys():
+                cost_dic[i][j] = min(dfs(i, j, cost_dic))
     # for i in range(1, n + 1):
-
-    #     temp = dfs(s, i, cost_dic)
-
-    #     if len(temp) > 0:
-    #         start_cost = min(temp)
-    #         answer.append( start_cost + min(dfs(i, a, cost_dic)) + min(dfs(i, b, cost_dic)))
-    return answer
+    #     pass
+    return 0
 
 
 def dfs(start, end, cost_dic):
@@ -36,14 +35,15 @@ def dfs(start, end, cost_dic):
         # 4
         temp_start, temp_cost = temp_list.pop(0)
         visited.append(temp_start)
+        if len(answer) > 0 and answer[0] < temp_cost:
+            continue
         #[1, 6, 2]
-        for i in range(len(cost_dic[temp_start].keys())):
-
-            if cost_dic[temp_start][i]:
-                answer.append(temp_cost + cost_dic[temp_start][1][i])
-            else:
-                if cost_dic[temp_start][0][i] not in visited:
-                    temp_list.append([cost_dic[temp_start][0][i], temp_cost + cost_dic[temp_start][1][i]])
+        for key in cost_dic[temp_start].keys():
+            if key == end:
+                if len(answer) == 0 or answer[0] > temp_cost + cost_dic[temp_start][key]:
+                    answer.append(temp_cost + cost_dic[temp_start][key])
+            elif key not in visited:
+                temp_list.append([key, temp_cost + cost_dic[temp_start][key]])
 
     return answer
 
