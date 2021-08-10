@@ -1,52 +1,67 @@
+cost_dic = {}
+answer_dic = {}
+
 def solution(n, s, a, b, fares):
 
-    cost_dic = {}
-    answer = []
+    global cost_dic, answer_dic
 
+    answer = float('inf')
+    
     for i in range(len(fares)):
-        if fares[i][0] not in cost_dic:
+        if fares[i][0] not in cost_dic.keys():
             cost_dic[fares[i][0]] = {fares[i][1]: fares[i][2]}
         else:
             cost_dic[fares[i][0]][fares[i][1]] = fares[i][2]
 
-        if fares[i][1] not in cost_dic:
+        if fares[i][1] not in cost_dic.keys():
             cost_dic[fares[i][1]] = {fares[i][0]: fares[i][2]}
         else:
             cost_dic[fares[i][1]][fares[i][0]] = fares[i][2]
 
-    for i in range(1, n + 1):
-        for j in range(1, n + 1):
-            if i != j or j not in cost_dic[i].keys():
-                cost_dic[i][j] = min(dfs(i, j, cost_dic))
-    # for i in range(1, n + 1):
-    #     pass
-    return 0
+    for i in range(1, n+1):
 
-
-def dfs(start, end, cost_dic):
-
-    if start == end:
-        return [0]
-
-    answer = []
-    temp_list = [[start, 0]]
-    visited = []
-    while temp_list:
-        # 4
-        temp_start, temp_cost = temp_list.pop(0)
-        visited.append(temp_start)
-        if len(answer) > 0 and answer[0] < temp_cost:
-            continue
-        #[1, 6, 2]
-        for key in cost_dic[temp_start].keys():
-            if key == end:
-                if len(answer) == 0 or answer[0] > temp_cost + cost_dic[temp_start][key]:
-                    answer.append(temp_cost + cost_dic[temp_start][key])
-            elif key not in visited:
-                temp_list.append([key, temp_cost + cost_dic[temp_start][key]])
+        temp_start_cost = find(s, i, fares)
+        if temp_start_cost != float('inf'):
+            result = temp_start_cost + find(i, a, fares) + find(i, b, fares)
+            print(result)
+            if result < answer:
+                answer = result
 
     return answer
 
+def find(start, end, fares):
+
+    global cost_dic, answer_dic
+
+    if start in answer_dic.keys() and end in answer_dic[start].keys():
+        return answer_dic[start][end]
+
+    if start == end:
+        return 0
+
+    answer = float('inf')
+    temp_list = [[start, 0]]
+    visited = []
+    while temp_list:
+        temp_start, temp_cost = temp_list.pop(0)
+        visited.append(temp_start)
+
+        if temp_cost < answer:
+            for key in cost_dic[temp_start]:
+                if key in visited:
+                    continue
+                
+                if key == end and temp_cost + cost_dic[temp_start][key] < answer:
+                    answer = temp_cost + cost_dic[temp_start][key]
+                    
+                elif temp_cost + cost_dic[temp_start][key] < answer:
+                    temp_list.append([key, temp_cost + cost_dic[temp_start][key]])
+
+    if start in answer_dic.keys():
+        answer_dic[start][end] = answer
+    else:
+        answer_dic[start] = {end:answer}
+
+    return answer
+                
 print(solution(6, 4, 6, 2, [[4, 1, 10], [3, 5, 24], [5, 6, 2], [3, 1, 41], [5, 1, 24], [4, 6, 50], [2, 4, 66], [2, 3, 22], [1, 6, 25]]))
-#print(dfs(4, 1, 0, [[4, 1, 10], [3, 5, 24], [5, 6, 2], [3, 1, 41], [5, 1, 24], [4, 6, 50], [2, 4, 66], [2, 3, 22], [1, 6, 25]], []))
-#print(solution(7, 3, 4, 1, [[5, 7, 9], [4, 6, 4], [3, 6, 1], [3, 2, 3], [2, 1, 6]]))
