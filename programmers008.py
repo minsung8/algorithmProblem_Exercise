@@ -1,67 +1,51 @@
-cost_dic = {}
-answer_dic = {}
+from heapq import heappop, heappush
 
 def solution(n, s, a, b, fares):
 
-    global cost_dic, answer_dic
+    cost = {}
+
+    for i in range(1, n + 1):
+        cost[i] = {}
+
+    for i in range(len(fares)):
+
+        cost[fares[i][0]][fares[i][1]] = fares[i][2]
+        cost[fares[i][1]][fares[i][0]] = fares[i][2]
 
     answer = float('inf')
-    
-    for i in range(len(fares)):
-        if fares[i][0] not in cost_dic.keys():
-            cost_dic[fares[i][0]] = {fares[i][1]: fares[i][2]}
-        else:
-            cost_dic[fares[i][0]][fares[i][1]] = fares[i][2]
 
-        if fares[i][1] not in cost_dic.keys():
-            cost_dic[fares[i][1]] = {fares[i][0]: fares[i][2]}
-        else:
-            cost_dic[fares[i][1]][fares[i][0]] = fares[i][2]
+    for i in range(1, n + 1):
+        
 
-    for i in range(1, n+1):
-
-        temp_start_cost = find(s, i, fares)
-        if temp_start_cost != float('inf'):
-            result = temp_start_cost + find(i, a, fares) + find(i, b, fares)
-            print(result)
-            if result < answer:
-                answer = result
-
+        answer = min(answer, find(i, s, cost) + find(i, a, cost) + find(i, b, cost))
+            
     return answer
 
-def find(start, end, fares):
 
-    global cost_dic, answer_dic
-
-    if start in answer_dic.keys() and end in answer_dic[start].keys():
-        return answer_dic[start][end]
-
+def find(start, end, cost):
+    
     if start == end:
         return 0
-
+    
     answer = float('inf')
-    temp_list = [[start, 0]]
+    temp = [[0, start]]
     visited = []
-    while temp_list:
-        temp_start, temp_cost = temp_list.pop(0)
+
+    while temp:
+        temp_cost, temp_start = heappop(temp)
         visited.append(temp_start)
+        if temp_cost > answer:
+            continue
 
-        if temp_cost < answer:
-            for key in cost_dic[temp_start]:
-                if key in visited:
-                    continue
-                
-                if key == end and temp_cost + cost_dic[temp_start][key] < answer:
-                    answer = temp_cost + cost_dic[temp_start][key]
-                    
-                elif temp_cost + cost_dic[temp_start][key] < answer:
-                    temp_list.append([key, temp_cost + cost_dic[temp_start][key]])
-
-    if start in answer_dic.keys():
-        answer_dic[start][end] = answer
-    else:
-        answer_dic[start] = {end:answer}
+        for key in cost[temp_start].keys():
+            if key == end and answer > temp_cost + cost[temp_start][key] and key not in visited:
+                answer = temp_cost + cost[temp_start][key]
+            elif key != end and answer > temp_cost + cost[temp_start][key] and key not in visited:
+                heappush(temp, [temp_cost + temp_cost + cost[temp_start][key], key])
 
     return answer
-                
+
+
 print(solution(6, 4, 6, 2, [[4, 1, 10], [3, 5, 24], [5, 6, 2], [3, 1, 41], [5, 1, 24], [4, 6, 50], [2, 4, 66], [2, 3, 22], [1, 6, 25]]))
+print(solution(7, 3, 4, 1, [[5, 7, 9], [4, 6, 4], [3, 6, 1], [3, 2, 3], [2, 1, 6]]))
+print(solution(6, 4, 5, 6, [[2,6,6], [6,3,7], [4,6,7], [6,5,11], [2,5,12], [5,3,20], [2,4,8], [4,3,9]]))
