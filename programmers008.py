@@ -11,39 +11,37 @@ def solution(n, s, a, b, fares):
 
         cost[fares[i][0]][fares[i][1]] = fares[i][2]
         cost[fares[i][1]][fares[i][0]] = fares[i][2]
-
+    print(cost)
     answer = float('inf')
 
     for i in range(1, n + 1):
-        
-
-        answer = min(answer, find(i, s, cost) + find(i, a, cost) + find(i, b, cost))
+        answer = min(answer, find(i, s, cost, n) + find(i, a, cost, n) + find(i, b, cost, n))
             
     return answer
 
 
-def find(start, end, cost):
+def find(start, end, cost, n):
     
     if start == end:
         return 0
     
-    answer = float('inf')
-    temp = [[0, start]]
-    visited = []
+    answer_list = [ float('inf') for i in range(n + 1) ]
+    answer_list[start] = 0
 
-    while temp:
-        temp_cost, temp_start = heappop(temp)
-        visited.append(temp_start)
-        if temp_cost > answer:
+    temp_list = [[0, start]]
+
+    while temp_list:
+        temp_cost, temp_start = heappop(temp_list)
+
+        if temp_cost > answer_list[temp_start]:
             continue
 
         for key in cost[temp_start].keys():
-            if key == end and answer > temp_cost + cost[temp_start][key] and key not in visited:
-                answer = temp_cost + cost[temp_start][key]
-            elif key != end and answer > temp_cost + cost[temp_start][key] and key not in visited:
-                heappush(temp, [temp_cost + temp_cost + cost[temp_start][key], key])
+            if answer_list[key] > temp_cost + cost[temp_start][key]:
+                answer_list[key] = temp_cost + cost[temp_start][key]
+                heappush(temp_list, [temp_cost + cost[temp_start][key], key])
 
-    return answer
+    return answer_list[end]
 
 
 print(solution(6, 4, 6, 2, [[4, 1, 10], [3, 5, 24], [5, 6, 2], [3, 1, 41], [5, 1, 24], [4, 6, 50], [2, 4, 66], [2, 3, 22], [1, 6, 25]]))
