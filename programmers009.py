@@ -7,11 +7,9 @@ def solution(play_time, adv_time, logs):
         temp_end = cal(temp_start, adv_time, '+')
         temp_answer = ''
 
-
     answer = ''
 
     return 
-
 
 def cal(t1, t2, s, multi=None):
     if s == '+':
