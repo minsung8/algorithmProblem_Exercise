@@ -1,68 +1,39 @@
 def solution(play_time, adv_time, logs):
-
-    if play_time == adv_time:
-        return "00:00:00"
-
+    
     answer_list = []
 
     for i in range(len(logs)):
         temp_start = logs[i].split('-')[0]
-        temp_end = cal(temp_start, adv_time, '+')
-        answer_list.append([temp_start, temp_end])
+        temp_end = plus(temp_start, adv_time)
+        if temp_end <= play_time and len(temp_end) == 8:
+            answer_list.append([temp_start, temp_end])
+    
+    if not answer_list:
+        return "00:00:00"
+    return answer_list
 
-    for i in range(len(answer_list)):
-        temp_score = 0
-        for j in range(len(logs)):
-            temp_score += cal2(logs[j], answer_list[i])
 
-        answer_list[i].append(temp_score)
+def plus(t1, t2):
+    h1, m1, s1 = t1.split(':')
+    h2, m2, s2 = t2.split(':')
+    temp_answer = int(h1) * 3600 + int(m1) * 60 + int(s1) + int(h2) * 3600 + int(m2) * 60 + int(s2)
+    answer = ""
+    temp_h = str(temp_answer // 3600)
+    if len(temp_h) == 1:
+        temp_h = '0' + temp_h
+    temp_answer = temp_answer % 3600
+    temp_m = str(temp_answer // 60)
+    if len(temp_m) == 1:
+        temp_m= '0' + temp_m
+    temp_answer = temp_answer % 60
+    temp_s = str(temp_answer)
+    if len(temp_s) == 1:
+        temp_s= '0' + temp_s
 
-    answer_list = sorted(answer_list, key=lambda x: (-x[2], x[0]))
+    return temp_h + ":" + temp_m + ":" + temp_s
 
-    return answer_list[0][0]
 
-def cal(t1, t2, s, multi=None):
-    if s == '+':
-        h1, m1, s1 = t1.split(':')
-        h2, m2, s2 = t2.split(':')
-        total = ((int(h1) + int(h2)) * 3600) + ((int(m1) + int(m2)) * 60) + ((int(s1) + int(s2)))
-
-    elif s == '-':
-            h1, m1, s1 = t1.split(':')
-            h2, m2, s2 = t2.split(':')
-            total1 = (int(h1) * 3600) + (int(m1) * 60) + (int(s1))
-            total2 = (int(h2) * 3600) + (int(m2) * 60) + (int(s2))
-            total = total1 - total2
-            return total
-
-    elif s == '*':
-        h2, m2, s2 = t2.split(':')
-        total = ((int(h2) * 3600) + (int(m2) * 60) + (int(s2))) * multi
-  
-    answer = ''
-    if len(str(total // 3600)) == 1:
-        answer += '0' + str(total // 3600) + ':'
-    else:
-        answer += str(total // 3600) + ':'
-    temp = total % 3600
-    if len(str(temp // 60)) == 1:
-        answer += '0' + str(temp // 60) + ':'
-    else:
-        answer += str(temp // 60) + ':'
-    temp = temp % 60
-    if len(str(temp)) == 1:
-        answer += '0' + str(temp)
-    else:
-        answer += str(temp)    
-
-    return answer 
-
-def cal2(log, adv_time): #[]
-    log_start, log_end = log.split('-')
-    adv_start, adv_end = adv_time[0], adv_time[1]
-
-    if log_end <= adv_start or log_start >= adv_end:
-        return 0
-    return cal(min(log_end, adv_end), max(log_start, adv_start), '-')
 
 print(solution("02:03:55", "00:14:15", ["01:20:15-01:45:14", "00:40:31-01:00:00", "00:25:50-00:48:29", "01:30:59-01:53:29", "01:37:44-02:02:30"]))
+print(solution("99:59:59", "25:00:00", ["69:59:59-89:59:59", "01:00:00-21:00:00", "79:59:59-99:59:59", "11:00:00-31:00:00"]))
+print(solution("50:00:00", "50:00:00", ["15:36:51-38:21:49", "10:14:18-15:36:51", "38:21:49-42:51:45"]))
