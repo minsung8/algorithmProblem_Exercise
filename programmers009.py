@@ -1,16 +1,25 @@
 def solution(play_time, adv_time, logs):
     
-    answer_list = []
+    answer_list = [["00:00:00", adv_time]]
 
     for i in range(len(logs)):
         temp_start = logs[i].split('-')[0]
         temp_end = plus(temp_start, adv_time)
         if temp_end <= play_time and len(temp_end) == 8:
             answer_list.append([temp_start, temp_end])
-    
-    if not answer_list:
-        return "00:00:00"
-    return answer_list
+
+    for i in range(len(answer_list)):
+        temp_start = answer_list[i][0] 
+        temp_end = answer_list[i][1]
+        temp_time = 0
+        for j in range(len(logs)):
+            time = minus(min(temp_end, logs[j].split('-')[1]), max(temp_start, logs[j].split('-')[0]))
+            if time > 0:
+                temp_time += time
+        answer_list[i].append(temp_time)
+
+    answer_list = sorted(answer_list, key=lambda x: (-x[2], x[0]), reverse=True)
+    return answer_list[-1][0]
 
 
 def plus(t1, t2):
@@ -32,7 +41,10 @@ def plus(t1, t2):
 
     return temp_h + ":" + temp_m + ":" + temp_s
 
-
+def minus(t1, t2): #t1 - t2
+    h1, m1, s1 = t1.split(':')
+    h2, m2, s2 = t2.split(':')
+    return (int(h1) * 3600 + int(m1) * 60 + int(s1)) - (int(h2) * 3600 + int(m2) * 60 + int(s2))
 
 print(solution("02:03:55", "00:14:15", ["01:20:15-01:45:14", "00:40:31-01:00:00", "00:25:50-00:48:29", "01:30:59-01:53:29", "01:37:44-02:02:30"]))
 print(solution("99:59:59", "25:00:00", ["69:59:59-89:59:59", "01:00:00-21:00:00", "79:59:59-99:59:59", "11:00:00-31:00:00"]))
