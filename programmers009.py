@@ -1,50 +1,57 @@
 def solution(play_time, adv_time, logs):
-    
-    answer_list = [["00:00:00", adv_time]]
+    answer_dic = {}
+    answer_dic[minute('00:00:00')] = minute(adv_time)
+    answer_dic[minute(play_time) - minute(adv_time)] = minute(play_time)
 
     for i in range(len(logs)):
-        temp_start = logs[i].split('-')[0]
-        temp_end = plus(temp_start, adv_time)
-        if temp_end <= play_time and len(temp_end) == 8:
-            answer_list.append([temp_start, temp_end])
+        temp_start, temp_end = logs[i].split('-')
+        if minute(temp_start) + minute(adv_time) <= minute(play_time):
+            answer_dic[minute(temp_start)] = minute(temp_start) + minute(adv_time)
+        if minute(temp_end) - minute(adv_time) >= 0:
+            answer_dic[minute(temp_end) - minute(adv_time)] = minute(temp_end)
+    
+    temp_list = sorted(list(answer_dic.keys()))
+    answer_list = []
+    logs = sorted(logs)
 
-    for i in range(len(answer_list)):
-        temp_start = answer_list[i][0] 
-        temp_end = answer_list[i][1]
-        temp_time = 0
-        for j in range(len(logs)):
-            time = minus(min(temp_end, logs[j].split('-')[1]), max(temp_start, logs[j].split('-')[0]))
-            if time > 0:
-                temp_time += time
-        answer_list[i].append(temp_time)
+    for key in temp_list:
+        time = 0
+        end_key = answer_dic[key]
+        for i in range(len(logs)):
+            temp_start, temp_end = logs[i].split('-')
 
-    answer_list = sorted(answer_list, key=lambda x: (-x[2], x[0]), reverse=True)
-    return answer_list[-1][0]
+            if minute(temp_start) >= end_key:
+                break
+            temp_time = min(end_key, minute(temp_end)) - max(key, minute(temp_start))
+            if temp_time > 0:
+                time += temp_time
+        answer_list.append([key, time])
 
+    return sec_to_str(sorted(answer_list, key=lambda x: (-x[1], x[0]))[0][0])
 
-def plus(t1, t2):
-    h1, m1, s1 = t1.split(':')
-    h2, m2, s2 = t2.split(':')
-    temp_answer = int(h1) * 3600 + int(m1) * 60 + int(s1) + int(h2) * 3600 + int(m2) * 60 + int(s2)
-    answer = ""
-    temp_h = str(temp_answer // 3600)
-    if len(temp_h) == 1:
-        temp_h = '0' + temp_h
-    temp_answer = temp_answer % 3600
-    temp_m = str(temp_answer // 60)
-    if len(temp_m) == 1:
-        temp_m= '0' + temp_m
-    temp_answer = temp_answer % 60
-    temp_s = str(temp_answer)
-    if len(temp_s) == 1:
-        temp_s= '0' + temp_s
+def minute(t):
+    h1, m1, s1 = t.split(':')
+    return int(h1) * 3600 + int(m1) * 60 + int(s1)
 
-    return temp_h + ":" + temp_m + ":" + temp_s
+def sec_to_str(s):
+    answer = ''
+    temp = str(int(s) // 3600)
+    if len(str(temp)) == 1:
+        temp = '0' + str(temp)
+    answer += str(temp) + ':'
+    s = int(s) % 3600
 
-def minus(t1, t2): #t1 - t2
-    h1, m1, s1 = t1.split(':')
-    h2, m2, s2 = t2.split(':')
-    return (int(h1) * 3600 + int(m1) * 60 + int(s1)) - (int(h2) * 3600 + int(m2) * 60 + int(s2))
+    temp = str(int(s) // 60)
+    if len(str(temp)) == 1:
+        temp = '0' + str(temp)
+    answer += str(temp) + ':'
+    s = int(s) % 60
+
+    temp = int(s)
+    if len(str(temp)) == 1:
+        temp = '0' + str(temp)
+    answer += str(temp)
+    return answer
 
 print(solution("02:03:55", "00:14:15", ["01:20:15-01:45:14", "00:40:31-01:00:00", "00:25:50-00:48:29", "01:30:59-01:53:29", "01:37:44-02:02:30"]))
 print(solution("99:59:59", "25:00:00", ["69:59:59-89:59:59", "01:00:00-21:00:00", "79:59:59-99:59:59", "11:00:00-31:00:00"]))
