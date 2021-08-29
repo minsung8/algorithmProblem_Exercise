@@ -1,23 +1,26 @@
+from collections import defaultdict
+
 def solution(play_time, adv_time, logs):
-    answer_dic = {}
-    answer_dic[minute('00:00:00')] = minute(adv_time)
-    answer_dic[minute(play_time) - minute(adv_time)] = minute(play_time)
+    logs = sorted(logs)
+    answer_dic = defaultdict(list)
+    answer_dic[minute('00:00:00')] = [minute(adv_time), 0]
+    answer_dic[minute(play_time) - minute(adv_time)] = [minute(play_time), len(logs) - 1]
 
     for i in range(len(logs)):
         temp_start, temp_end = logs[i].split('-')
         if minute(temp_start) + minute(adv_time) <= minute(play_time):
-            answer_dic[minute(temp_start)] = minute(temp_start) + minute(adv_time)
+            answer_dic[minute(temp_start)] = [minute(temp_start) + minute(adv_time), i]
         if minute(temp_end) - minute(adv_time) >= 0:
-            answer_dic[minute(temp_end) - minute(adv_time)] = minute(temp_end)
-    
+            answer_dic[minute(temp_end) - minute(adv_time)] = [minute(temp_end), i]
     temp_list = sorted(list(answer_dic.keys()))
     answer_list = []
-    logs = sorted(logs)
-
+    answer = []
+    answer_time = 0
     for key in temp_list:
         time = 0
-        end_key = answer_dic[key]
-        for i in range(len(logs)):
+        end_key = answer_dic[key][0]
+        for i in range(answer_dic[key][1] - 1, len(logs)):
+
             temp_start, temp_end = logs[i].split('-')
 
             if minute(temp_start) >= end_key:
@@ -25,10 +28,11 @@ def solution(play_time, adv_time, logs):
             temp_time = min(end_key, minute(temp_end)) - max(key, minute(temp_start))
             if temp_time > 0:
                 time += temp_time
-        answer_list.append([key, time])
-
-    return sec_to_str(sorted(answer_list, key=lambda x: (-x[1], x[0]))[0][0])
-
+        if not answer or answer_time < time:
+            answer = [key, time]
+            answer_time = time
+    return sec_to_str(answer[0])
+ 
 def minute(t):
     h1, m1, s1 = t.split(':')
     return int(h1) * 3600 + int(m1) * 60 + int(s1)
