@@ -1,14 +1,35 @@
-
 def solution(play_time, adv_time, logs):
-    memo = [0 for i in range(minute(play_time) + 1)]
+    play_list = [ 0 for i in range(minute(play_time) + 1)]
 
     for log in logs:
-        start, end = log.split('-')
-    return 
- 
+        temp_start, temp_end = log.split('-')
+        play_list[minute(temp_start) + 1] += 1
+        play_list[minute(temp_end) - 1] -= 1
+
+    for i in range(1, len(play_list)):
+        play_list[i] += play_list[i - 1]
+    
+    for i in range(1, len(play_list)):
+        play_list[i] += play_list[i - 1]
+
+    temp_time = 0
+    answer = 0
+
+    for i in range(minute(play_time)):
+        end = i + minute(adv_time)
+        if end > minute(play_time):
+            end = minute(play_time)
+        if temp_time < play_list[end] - play_list[i]:
+            temp_time = play_list[i + minute(adv_time)] - play_list[i]
+            answer = i
+
+    return sec_to_str(answer)
+
+
 def minute(t):
     h1, m1, s1 = t.split(':')
     return int(h1) * 3600 + int(m1) * 60 + int(s1)
+
 
 def sec_to_str(s):
     answer = ''
@@ -31,5 +52,5 @@ def sec_to_str(s):
     return answer
 
 print(solution("02:03:55", "00:14:15", ["01:20:15-01:45:14", "00:40:31-01:00:00", "00:25:50-00:48:29", "01:30:59-01:53:29", "01:37:44-02:02:30"]))
-#print(solution("99:59:59", "25:00:00", ["69:59:59-89:59:59", "01:00:00-21:00:00", "79:59:59-99:59:59", "11:00:00-31:00:00"]))
-#print(solution("50:00:00", "50:00:00", ["15:36:51-38:21:49", "10:14:18-15:36:51", "38:21:49-42:51:45"]))
+print(solution("99:59:59", "25:00:00", ["69:59:59-89:59:59", "01:00:00-21:00:00", "79:59:59-99:59:59", "11:00:00-31:00:00"]))
+print(solution("50:00:00", "50:00:00", ["15:36:51-38:21:49", "10:14:18-15:36:51", "38:21:49-42:51:45"]))
