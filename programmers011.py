@@ -10,7 +10,6 @@ def solution(s):
             if "".join(temp_list[i:i+3]) == '110':
                 front = temp_list[:i]
                 back = temp_list[i+3:]
-                print(i, front, back, temp_list)
                 if len(front) < 3:
                     if "".join(front) < '110':
                         temp_list = ['1', '1', '0'] + front + back
@@ -23,9 +22,9 @@ def solution(s):
                             break
                 if flag:
                     continue
-
+                
                 if len(back) < 3:
-                    if "".join(back) > '110':
+                    if "".join(back) < '110':
                         temp_list = front + back + ['1', '1', '0']
                         continue
                 else:
@@ -36,5 +35,6 @@ def solution(s):
                 
         answer_list.append("".join(temp_list))
     return answer_list
-print(solution(["1110","100111100","0111111010"]	))
+    
+print(solution(["1110","100111100","0111111010"]		))
 # ["1101","100110110","0110110111"]
