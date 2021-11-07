@@ -2,7 +2,7 @@ def solution(s):
 
     answer = []
 
-    for temp_s in s:
+    for temp_s in s: #
 
         i = 0
         temp_list = list(temp_s)
