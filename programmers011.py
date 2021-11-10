@@ -2,20 +2,23 @@ def solution(s):
 
     answer = []
 
-    for temp_s in s: 
+    for temp_s in s:
+        
         temp_list = []
         temp_cnt = 0
-        
-        for s in temp_s:
-            if s == '0':
+        for i in range(len(temp_s)):
+
+            if temp_s[i] == '0':
                 if temp_list[-2:] == ['1', '1']:
                     temp_list.pop(-1)
                     temp_list.pop(-1)
                     temp_cnt += 1
                 else:
-                    temp_list.append(s)
+                    temp_list.append(temp_s[i])
+
             else:
-                temp_list.append(s)
+                temp_list.append(temp_s[i])
+        
         if '0' not in temp_list:
             temp_answer = ('110' * temp_cnt) + "".join(temp_list)
         else:
@@ -25,7 +28,6 @@ def solution(s):
                     temp_answer = "".join(temp_list[:j + 1]) + ('110' * temp_cnt) + "".join(temp_list[j+1:])
                     break
                 j -= 1
-        
         answer.append(temp_answer)
     return answer
 
