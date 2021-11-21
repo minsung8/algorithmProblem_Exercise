@@ -3,18 +3,20 @@ def solution(sticker):
     if len(sticker) < 4:
         return max(sticker)
 
-    front_zero_sticker = sticker.copy()
-    front_zero_sticker[0] = 0
-    for i in range(2, len(front_zero_sticker)):
-        front_zero_sticker[i] = max(front_zero_sticker[i - 1], front_zero_sticker[i - 2] + front_zero_sticker[i])
+    # 첫번째를 뜯을 경우
+    first_case = sticker.copy()
+    first_case[-1] = 0
+    first_case[1] = sticker[0]
+    for i in range(2, len(first_case)):
+        first_case[i] = max(first_case[i - 1], first_case[i] + first_case[i - 2])
+    
+    # 그 외
+    second_case = sticker.copy()
+    second_case[0] = 0
+    for i in range(2, len(second_case)):
+        second_case[i] = max(second_case[i - 1], second_case[i] + second_case[i - 2])
 
-    back_zero_sticker = sticker.copy()
-    back_zero_sticker[1] = 0
-    back_zero_sticker[-1] = 0
-    for i in range(2, len(back_zero_sticker)):
-        back_zero_sticker[i] = max(back_zero_sticker[i - 1], back_zero_sticker[i - 2] + back_zero_sticker[i])
-
-    return max(front_zero_sticker[-1], back_zero_sticker[-1])
+    return max(first_case[-1], second_case[-1])
 
 print(solution([14, 6, 5, 11, 3, 9, 2, 10]	)) # 36
 print(solution([1, 3, 2, 5, 4])) # 8
