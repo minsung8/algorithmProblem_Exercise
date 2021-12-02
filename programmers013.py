@@ -12,19 +12,22 @@ def solution(a, edges):
         dic[y].append(x)
 
     temp_list = sorted(list(dic.keys()), key=lambda x: len(dic[x]))
-    visited = []
+    visited = {}
+    for i in range(len(a)):
+        visited[i] = 0
     answer = 0
-
+    temp_list.pop(-1)
     for temp in temp_list:
         dif = a[temp]
-        for i in range(len(dic[temp])):
-            if dic[temp][i] not in visited:
-                a[dic[temp][i]] += dif
-                a[temp] = 0
-                visited.append(temp)
-                answer += abs(dif)
-                break
-    
+        if a[temp] != 0:
+            for i in range(len(dic[temp])):
+                if visited[dic[temp][i]] == 0:
+                    a[dic[temp][i]] += dif
+                    a[temp] = 0
+                    answer += abs(dif)
+                    break
+        visited[temp] = 1
+
     for temp in a:
         if temp != 0:
             return -1
