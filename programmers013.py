@@ -17,19 +17,26 @@ def solution(a, edges):
     for key in graph.keys():
         if len(graph[key]) == 1:
             end_node_list.append(key)
-    print(end_node_list)
+    
     while end_node_list:
-        temp = end_node_list.pop(0)
-        if not graph[temp]:
+        temp_key = end_node_list.pop(0)
+        if graph[temp_key]:
+            temp_value = graph[temp_key].pop(0)
+
+            a[temp_value] += a[temp_key]
+            answer += abs(a[temp_key])
+            a[temp_key] = 0
+
+            for i in range(len(graph[temp_value])):
+                if graph[temp_value][i] == temp_key:
+                    graph[temp_value].pop(i)
+                    break
+            
+            if len(graph[temp_value]) == 1:
+                end_node_list.append(temp_value)
+
+        else:
             continue
-        next_node = graph[temp][0]
-        a[next_node] += a[temp]
-        answer += abs(a[temp])
-
-        graph[next_node].remove(temp)
-
-        if len(graph[next_node]) == 1:
-            end_node_list.append(next_node)
 
     return answer
 
