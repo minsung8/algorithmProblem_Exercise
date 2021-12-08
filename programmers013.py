@@ -11,34 +11,22 @@ def solution(a, edges):
     for x, y in edges:
         graph[x].append(y)
         graph[y].append(x)
-
-    end_node_list = []
-
-    for key in graph.keys():
-        if len(graph[key]) == 1:
-            end_node_list.append(key)
     
-    while end_node_list:
-        temp_key = end_node_list.pop(0)
-        if graph[temp_key]:
-            temp_value = graph[temp_key].pop(0)
+    key_list = list(graph.keys())
 
-            a[temp_value] += a[temp_key]
-            answer += abs(a[temp_key])
-            a[temp_key] = 0
-
-            for i in range(len(graph[temp_value])):
-                if graph[temp_value][i] == temp_key:
-                    graph[temp_value].pop(i)
-                    break
-            
-            if len(graph[temp_value]) == 1:
-                end_node_list.append(temp_value)
-
+    while key_list:
+        key = key_list.pop(0)
+        if len(graph[key]) == 1:
+            temp_value = graph[key].pop(0)
+            answer += abs(a[key])
+            a[temp_value] += a[key]
+            a[key] = 0
+            graph[temp_value].remove(key)
         else:
-            continue
+            key_list.append(key)
 
-    return answer
+
+    return graph, a, answer, edges, graph.keys()
 
 print(solution([-5,0,2,1,2], [[0,1],[3,4],[2,3],[0,3]])) # 9
-#print(solution([0, 1, 0], [[0,1],[1,2]])) # -1
+print(solution([0, 1, 0], [[0,1],[1,2]])) # -1
