@@ -32,8 +32,6 @@ def dfs(start, a):
         if visited[v] == 0:
             dfs(v, a)
             answer += abs(a[v])
-            
-    return 
 
 print(solution([-5,0,2,1,2], [[0,1],[3,4],[2,3],[0,3]])) # 9
 print(solution([0, 1, 0], [[0,1],[1,2]])) # -1
