@@ -9,8 +9,9 @@ def solution(a, b, g, s, w, t):
         dic[i].append(s[i])
         dic[i].append(w[i])
         dic[i].append(t[i])
-
-    dic = sorted(dic, key=lambda x: dic[x][2] // dic[x][3], reverse=True)
+    key_list = sorted(dic, key=lambda x: dic[x][3], reverse=True)
+    print(key_list)
+    
     return dic
 
 #print(solution(10, 10, [100], [100], [7], [10]))        #10
