@@ -1,39 +1,32 @@
-global_board = []
+#   imos 알고리즘 사용
 
 def solution(board, skill):
-
-    global global_board
-    global_board = board
+    answer = 0
+    temp_board =[[0 for j in range(len(board[0])+1)] for i in range(len(board) + 1)]
 
     for s in skill:
-        # type = s[0]
-        # start_i, start_j = s[1], s[2]
-        # end_i, end_j = s[3], s[4]
-        # degree = s[5]
 
-        if s[0] == 1:   # attack
-            cal(s[1], s[2], s[3], s[4], (s[5] * -1))
-        else:   # recovery
-            cal(s[1], s[2], s[3], s[4], s[5])
+        if s[0] == 1:   # 파괴
+            temp_score = -s[5]
+        else:   # 회복
+            temp_score = s[5]
 
-    return count(global_board)
+        for i in range(s[1], s[3] + 1):
+            temp_board[i][s[2]] += temp_score
+            temp_board[i][s[4] + 1] += (temp_score * -1)
+    
+    for i in range(len(temp_board)):
+        for j in range(1, len(temp_board[i]) - 1):
+            temp_board[i][j] += temp_board[i][j - 1]
 
-def count(board):
-    cnt = 0
     for i in range(len(board)):
-        for j in range(len(board[i])):
+        for j in range(len(board[0])):
+            board[i][j] += temp_board[i][j]
             if board[i][j] > 0:
-                cnt += 1
-    return cnt
+                answer += 1
 
-def cal(start_i, start_j, end_i, end_j, deg):
-    global global_board
+    return answer
 
-    for i in range(start_i, end_i + 1):
-        for j in range(start_j, end_j + 1):
-            global_board[i][j] += deg
-
-    return
 
 print(solution(
     [[5,5,5,5,5],[5,5,5,5,5],[5,5,5,5,5],[5,5,5,5,5]],
