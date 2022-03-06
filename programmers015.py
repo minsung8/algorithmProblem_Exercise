@@ -11,13 +11,18 @@ def solution(board, skill):
         else:   # 회복
             temp_score = s[5]
 
-        for i in range(s[1], s[3] + 1):
-            temp_board[i][s[2]] += temp_score
-            temp_board[i][s[4] + 1] += (temp_score * -1)
-    
+        temp_board[s[1]][s[2]] += temp_score
+        temp_board[s[1]][s[4] + 1] += temp_score * -1
+        temp_board[s[3] + 1][s[2]] += temp_score * -1
+        temp_board[s[3] + 1][s[4] + 1] += temp_score
+
     for i in range(len(temp_board)):
-        for j in range(1, len(temp_board[i]) - 1):
+        for j in range(1, len(temp_board[0])):
             temp_board[i][j] += temp_board[i][j - 1]
+
+    for j in range(len(temp_board[0])):
+        for i in range(1, len(temp_board)):
+            temp_board[i][j] += temp_board[i - 1][j]
 
     for i in range(len(board)):
         for j in range(len(board[0])):
