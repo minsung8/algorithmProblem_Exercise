@@ -1,73 +1,30 @@
+from turtle import Turtle
+
+
 def solution(a, b, g, s, w, t):
 
-    # gold, silver, weight, time, current_time
-    temp_list = []
-    temp_time = 0
+    max_t =  (2 * 10 ** 9) * 2 * (10 ** 5) + 1
 
-    for i in range(len(t)):
-        temp_list.append([g[i], s[i], w[i], t[i], t[i]])
+    # test
+    max_t = 100
 
+    ## 이분탐색
     while True:
-        # temp_list.sort(key=lambda x : x[-1])
-        bucket = []
-        temp_g, temp_s, temp_weight, temp_t, temp_current_time = temp_list.pop(0)
-        idx_weight = temp_weight
 
-        # gold를 캐야할 경우
-        if a > 0 and temp_g > 0:
-            
-            # 무게가 필요한 금보다 많을 경우
-            if a < temp_weight:
-                if a < temp_g:
-                    bucket.append(a)
-                    temp_g -= a
-                    temp_weight -= a
-                else:
-                    bucket.append(temp_g)
-                    temp_weight -= temp_g
-                    temp_g = 0
-
-            else:
-                if temp_g > temp_weight:
-                    bucket.append(temp_weight)
-                    temp_g -= temp_weight
-                    temp_weight = 0
-                else:
-                    bucket.append(temp_g)
-                    temp_weight -= temp_g
-                    temp_g = 0
-
-        else:
-            bucket.append(0)
-
-        # 금을 캐고 무게가 남았을경우
-        if temp_weight > 0:
-            if temp_weight < temp_s:
-                bucket.append(temp_weight)
-                temp_s -= temp_weight
-                temp_weight = 0
-            else:
-                bucket.append(temp_s)
-                temp_weight -= temp_s
-                temp_s = 0
-        else:
-            bucket.append(0)
-
-        a -= bucket[0]
-        b -= bucket[1]
-
-        temp_time = temp_current_time
-        temp_current_time += temp_t * 2
-
-        temp_list.append([temp_g, temp_s, idx_weight, temp_t, temp_current_time])
+        temp_g = 0
+        temp_s = 0
         
-        if a <= 0 and b <= 0:
-            break
-    
-    return temp_time
+        for i in range(len(g)):
+            temp_cnt = int((max_t + t[i]) / (2 * t[i]))
+            print(temp_cnt)
 
+        break
+
+    return 
 
 print(solution(10, 10, [100], [100], [7], [10]))    # 50
-#print(solution(90, 500, [70, 70, 0], [0, 0, 500], [100, 100, 2], [4, 8, 1]))    # 50
+print(solution(90, 500, [70, 70, 0], [0, 0, 500], [100, 100, 2], [4, 8, 1]))    # 50
 
-# 2n + 1
+# 2k(n - 1) +k = 50
+# 2kn - 2k + k = 50
+# (50 + k) = 2kn
