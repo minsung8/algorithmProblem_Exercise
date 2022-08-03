@@ -17,10 +17,18 @@ def solution(game_board, table):
                 print(temp)
                 if checked_table(temp):
                     answer += len(temp)
+                return answer
 
     return answer
 
 def checked_table(temp):
+    
+    temp_list = []
+    start_i, start_y = temp[0][0], temp[0][1]
+    for i in range(1, len(temp)):
+        temp_i, temp_y = temp[i][0], temp[i][1]
+        temp_list.append([temp_i - start_i, temp_y - start_y])
+    print(temp_list)
     return True
 
 def bfs(start_i, start_j, game_board):
@@ -59,3 +67,6 @@ def bfs(start_i, start_j, game_board):
 print(solution([[1,1,0,0,1,0],[0,0,1,0,1,0],[0,1,1,0,0,1],[1,1,0,1,1,1],[1,0,0,0,1,0],[0,1,1,1,0,0]],
     [[1,0,0,1,1,0],[1,0,1,0,1,0],[0,1,1,0,1,1],[0,0,1,0,0,0],[1,1,0,1,1,0],[0,1,0,0,0,0]]))
 #print(solution([[0,0,0],[1,1,0],[1,1,1]], [[1,1,1],[1,0,0],[0,0,0]]))
+
+# 02 03 13 23 24
+# 
