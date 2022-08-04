@@ -14,21 +14,43 @@ def solution(game_board, table):
             
             if game_board[i][j] == 0:
                 temp = bfs(i, j, game_board)
-                print(temp)
-                if checked_table(temp):
+                if checked_table(temp, table):
                     answer += len(temp)
                 return answer
 
     return answer
 
-def checked_table(temp):
+def checked_table(temp, table):
     
     temp_list = []
-    start_i, start_y = temp[0][0], temp[0][1]
+    start_i, start_j = temp[0][0], temp[0][1]
+
     for i in range(1, len(temp)):
-        temp_i, temp_y = temp[i][0], temp[i][1]
-        temp_list.append([temp_i - start_i, temp_y - start_y])
-    print(temp_list)
+        temp_i, temp_j = temp[i][0], temp[i][1]
+        temp_answer = [temp_i - start_i, temp_j - start_j]
+        temp_list.append(temp_answer)
+
+    # 90도 회전
+    temp_list_90 = []
+    for i in range(len(temp_list)):
+        temp_list_90.append([temp_list[i][1], -temp_list[i][0]])
+
+    # 180도 회전
+    temp_list_180 = []
+    for i in range(len(temp_list)):
+        temp_list_180.append([temp_list_90[i][1], -temp_list_90[i][0]])
+    
+    # 270도 회전
+    temp_list_270 = []
+    for i in range(len(temp_list)):
+        temp_list_270.append([temp_list_180[i][1], -temp_list_180[i][0]])
+
+    print(temp_list_180)
+    for i in range(len(table)):
+        for j in range(len(table[i])):
+            if table[i][j] == 0:
+                pass
+        
     return True
 
 def bfs(start_i, start_j, game_board):
