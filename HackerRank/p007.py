@@ -2,34 +2,32 @@
 
 def simpleArraySum(ranked, player):
     # Write your code here
+    
 
-    ranked_set_list = sorted(list(set(ranked)), reverse=True)
     all_list = sorted(list(set(ranked + player)), reverse=True)
-    answer_list = []
+
+    ranked_dic = {}
+
+    for i in range(len(ranked)):
+        ranked_dic[ranked[i]] = True
+
+    temp_rank = 1
     for i in range(len(all_list)):
-        if all_list[i] in ranked_set_list:
-            answer_list.append([all_list[i], ranked_set_list.index(all_list[i]) + 1])
+        if ranked_dic.get(all_list[i]):
+            ranked_dic[all_list[i]] = temp_rank
+            temp_rank += 1
         else:
-            answer_list.append([all_list[i], -1])
-
-    rank_dic = {}
-    for i in range(len(answer_list) - 1):
-        if answer_list[i][1] == -1:
-            rank_dic[answer_list[i][0]] = answer_list[i + 1][1]
-        else:
-            rank_dic[answer_list[i][0]] = answer_list[i][1]
-    if answer_list[-1][1] == -1:
-        rank_dic[answer_list[-1][0]] = len(ranked_set_list) + 1
-    else:
-        rank_dic[answer_list[-1][0]] = answer_list[-1][1]
-
+            ranked_dic[all_list[i]] = temp_rank
+    
     answer = []
-    for p in player:
-        answer.append(rank_dic[p])
+    for i in range(len(player)):
+        answer.append( ranked_dic[player[i]] )
+    
     return answer
 
-    
-print(simpleArraySum([100, 100, 50, 40, 40, 20, 10], [5, 25, 50, 120]))     # 6 4 2 1
+#print(simpleArraySum([100, 100, 50, 40, 40, 20, 10], [5, 25, 50, 120]))     # 6 4 2 1
+print(simpleArraySum([100, 90, 90, 80, 75, 60], [50, 65, 77, 90, 102] ))    # 6 5 4 2 1
 
-# 120 100 50 40 25 20 10 5
-#      1   2  3     4  5 
+
+# 102 100 90 80 77 75 65 60 50
+#      1   2  3     4     5
