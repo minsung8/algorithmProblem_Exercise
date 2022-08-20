@@ -1,30 +1,37 @@
 # https://www.hackerrank.com/challenges/non-divisible-subset/problem?isFullScreen=true
 
 from itertools import combinations
-
+from collections import defaultdict
 def solution(k, s):
 
-    start = len(s)
-    answer = 0
-
-    while start > 0:
+    dic = defaultdict(list)
+    answer = []
+    for i in range(len(s)):
+        for j in range(i + 1, len(s)):
+            if (s[i] + s[j]) % k != 0:
+                dic[s[i]].append(s[j])
+                dic[s[j]].append(s[i])
+    
+    for a in dic.keys():
+        answer.append(check(dic[a], k))
         
-        temp_list = combinations(s, start)
-        flag = True
-        
-        for t in temp_list:
-            temp_list2 = combinations(t, 2)
-            for t2 in temp_list2:
-                if sum(t2) % k == 0:
-                    flag = False
-                    break
-            if flag:
-                return start
-            flag = True
-        start -= 1
+    return answer
 
-    return 0
+
+def check(s, k):
+
+    dic = defaultdict(list)
+    for i in range(len(s)):
+        for j in range(i + 1, len(s)):
+            if (s[i] + s[j]) % k != 0:
+                dic[s[i]].append(s[j])
+                dic[s[j]].append(s[i])
+    
+    print(len(dic.keys()))
+
+    return 
 
 
 print(solution(3, [1, 7, 2, 4]))    # 3
 print(solution(7, [278, 576, 496, 727, 410, 124, 338, 149, 209, 702, 282, 718, 771, 575, 436]))
+
