@@ -1,77 +1,42 @@
 # https://www.hackerrank.com/challenges/queens-attack-2/problem?isFullScreen=true
 
+from collections import defaultdict
+
 def solution(n, k, r_q, c_q, obstacles):
 
-    board = [ [0] * n for i in range(n)]
+    dic = defaultdict(boolean)
+
+    for ob in obstacles:  
+        dic[f"{ob[0]},{ob[1]}"] = 1
+
     answer = 0
 
-    for x, y in obstacles:
-        board[n - x][y - 1] = 1
+    answer += move(1, 0, r_q, c_q, dic, n)
+    answer += move(-1, 0, r_q, c_q, dic, n)
+    answer += move(0, 1, r_q, c_q, dic, n)
+    answer += move(0, -1, r_q, c_q, dic, n)
+    answer += move(1, 1, r_q, c_q, dic, n)
+    answer += move(-1, 1, r_q, c_q, dic, n)
+    answer += move(1, -1, r_q, c_q, dic, n)
+    answer += move(-1, -1, r_q, c_q, dic, n)
+
+    return answer
+
+def move(x, y, start_x, start_y, dic, n):
+
+    answer = 0
     
-    start_i, start_j = n - r_q, c_q - 1 
-    board[start_i][start_j] = 1
-    
-    # i+
-    for i in range(1, n):
-        temp = start_i + i
-        if (temp > n - 1) or board[temp][start_j] == 1:
-            break
-        else:
-            answer += 1
+    while True:
 
-    # j+
-    for i in range(1, n):
-        temp = start_j + i
-        if (temp > n - 1) or board[start_i][temp] == 1:
-            break
-        else:
-            answer += 1
+        start_x += x
+        start_y += y
 
-    # i-
-    for i in range(1, n):
-        temp = start_i - i
-        if (temp < 0) or board[temp][start_j] == 1:
+        if (n < start_x or n < start_y) or (start_x < 1 or start_y < 1):
             break
-        else:
-            answer += 1
-    
-    # j-
-    for i in range(1, n):
-        temp = start_j - i
-        if (temp < 0) or board[start_i][temp] == 1:
+        
+        if dic[f"{start_x},{start_y}"] == 1:
             break
-        else:
-            answer += 1
 
-    # i+j+
-    for i in range(1, n):
-        temp_i, temp_j = start_i + i, start_j + i
-        if temp_i > n - 1 or temp_j > n - 1 or board[temp_i][temp_j] == 1:
-            break
-        else:
-            answer += 1
-
-    # i-j-
-    for i in range(1, n):
-        temp_i, temp_j = start_i - i, start_j - i
-        if temp_i < 0 or temp_j < 0 or board[temp_i][temp_j] == 1:
-            break
-        else:
-            answer += 1
-    
-    # i+j-
-    for i in range(1, n):
-        temp_i, temp_j = start_i + i, start_j - i
-        if temp_i > n - 1 or temp_j < 0 or board[temp_i][temp_j] == 1:
-            break
-        else:
-            answer += 1
-
-    # i-j+
-    for i in range(1, n):
-        temp_i, temp_j = start_i - i, start_j + i
-        if temp_i < 0 or temp_j > n - 1 or board[temp_i][temp_j] == 1:
-            break
         else:
             answer += 1
 
@@ -82,4 +47,4 @@ print(solution(4, 0, 4, 4, []))     # 9
 print(solution(5, 3, 4, 3, [[5, 5], [4, 2], [2, 3]]))     # 10
 print(solution(1, 0, 1, 1, []))     # 0
 
-# print(solution(100000, 0, 4187, 5068, []))
+print(solution(100000, 0, 4187, 5068, []))
