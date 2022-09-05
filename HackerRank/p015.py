@@ -4,26 +4,22 @@
 def gridSearch(G, P):
 
     start = P[0]
-    idx = 1
+    _len = len(start)
+
     for i in range(len(G)):
 
-        if start in G[i]:
-            
-            start_idx = G[i].index(start)
-            cnt = 1
-            for j in range(i + 1, len(G)):
-                if P[idx] != G[j][start_idx:start_idx + len(start)]:
-                    flag = False
-                    break
-                cnt += 1
-                idx += 1
+        for j in range(len(G[i]) - _len + 1):
+            if G[i][j:j + _len] == start:
+                idx = 1
 
-                if idx == len(P):
-                    break
+                for k in range(1, len(P)):
+                    if i + idx == len(G): break
 
-            if cnt == len(P):
-                return "YES"
-            else: idx = 1
+                    if P[k] != G[i + idx][j:j + _len]:
+                        break
+                    idx += 1
+                
+                if idx == len(P): return "YES"
             
     return "NO"
 
@@ -42,9 +38,9 @@ print(gridSearch([
 "511799789562806",
 "404007454272504",
 "549043809916080",
-"962410801534811",
+"96241080534811",
 "445893523733475",
-"768795303214174",
-"650629270887160",
+"768700303214199",
+"650629270887191",
 ],
-["9", "9"]))
+["99", "99"]))
