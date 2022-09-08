@@ -17,9 +17,8 @@ def absolutePermutation(n, k):
             if _list[i] + k > n:
                 return [-1]
             _answer.append(_list[i] + k) 
-        
-    return _answer
 
+    return _answer
 
 print(absolutePermutation(4, 2))    # 2 1
 
