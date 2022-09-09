@@ -9,20 +9,23 @@ def absolutePermutation(n, k):
         _list.append(i)
 
     _answer = []
+    temp_dic = {}
 
     for i in range(len(_list)):
-        if _list[i] - k > 0:
+        if _list[i] - k > 0 and not temp_dic.get(_list[i] - k):
             _answer.append(_list[i] - k)
+            temp_dic[_list[i] - k] = True
         else:
-            if _list[i] + k > n:
+            if temp_dic.get(_list[i] + k) or _list[i] + k > n:
                 return [-1]
             _answer.append(_list[i] + k) 
-        
+            temp_dic[_list[i] + k] = True
     return _answer
 
-
-print(absolutePermutation(4, 2))    # 2 1
 
 print(absolutePermutation(2, 1))    # 2 1
 print(absolutePermutation(3, 0))    # 1 2 3
 print(absolutePermutation(3, 2))    # -1
+
+
+print(absolutePermutation(3, 1))    # 1 2 3
