@@ -3,58 +3,57 @@
 
 def bomberMan(n, grid):
     # Write your code here
+    if n == 1: 
+        return grid
 
-    start_grid = grid.copy()
-    all_bomb_grid = []
-
+    real_bomb_grid = []
     for i in range(len(grid)):
-        all_bomb_grid.append('O' * len(grid))
+        real_bomb_grid.append('O' * len(grid[0]))
 
-    n -= 3
+    if n % 2 == 0: return real_bomb_grid
 
-    while True:
-        all_bomb_grid = []
+    cnt = (n - 1) // 2
+
+    bomb_grid = real_bomb_grid.copy()
+    answer = []
+    for c in range(4):
+        
         for i in range(len(grid)):
-            all_bomb_grid.append(list('O' * len(grid[0])))
+            for j in range(len(grid[i])):
+                
+                if grid[i][j] == 'O':
+                    bomb_grid[i] = bomb_grid[i][:j] + '.' + bomb_grid[i][j + 1:]
 
-        for i in range(len(start_grid)):
-            for j in range(len(start_grid[i])):
-                if start_grid[i][j] == 'O':
-                    all_bomb_grid[i][j] = '.'
-                    if i + 1 < len(all_bomb_grid): all_bomb_grid[i + 1][j] = '.'
-                    if j + 1 < len(all_bomb_grid[0]): all_bomb_grid[i][j + 1] = '.'
-                    if i > 0: all_bomb_grid[i - 1][j] = '.'
-                    if j > 0: all_bomb_grid[i][j - 1] = '.'
-        
-        answer = []
-        for g in all_bomb_grid:
-            answer.append("".join(g))
-        start_grid = answer
-
-        if n <= 0:
-            return start_grid
-        
-        if n % 2 == 1:
-            for i in range(len(grid)):
-                all_bomb_grid.append('O' * len(grid)) 
-            return all_bomb_grid
-        n -= 2
+                    if i + 1 < len(grid): bomb_grid[i + 1] = bomb_grid[i + 1][:j] + '.' + bomb_grid[i + 1][j + 1:]
+                    if j + 1 < len(grid[0]): bomb_grid[i] = bomb_grid[i][:j + 1] + '.' + bomb_grid[i][j + 2:]
+                    if i > 0: bomb_grid[i - 1] = bomb_grid[i - 1][:j] + '.' + bomb_grid[i - 1][j + 1:]
+                    if j > 0: bomb_grid[i] = bomb_grid[i][:j - 1] + '.' + bomb_grid[i][j:]
+        answer.append(bomb_grid)
+        grid = bomb_grid
+        bomb_grid = real_bomb_grid.copy()
+    
+    if cnt % 2 == 0: return answer[1]
+    return answer[0]
 
 print(bomberMan(3, ['.......', '...O...', '....O..', '.......', 'OO.....', 'OO.....']))
+# print(bomberMan(7, ['.......', '...O...', '....O..', '.......', 'OO.....', 'OO.....']))
+# print(bomberMan(9, ['.......', '...O...', '....O..', '.......', 'OO.....', 'OO.....']))
+# print(bomberMan(11, ['.......', '...O...', '....O..', '.......', 'OO.....', 'OO.....']))
+
 # OOO.OOO
 # OO...OO
 # OOO...O
 # ..OO.OO
 # ...OOOO
 # ...OOOO
-
 print(bomberMan(5, ['.......', '...O.O.', '....O..', '..O....', 'OO...OO', 'OO.O...']))
-# .......
-# ...O.O.
-# ...OO..
-# ..OOOO.
-# OOOOOOO
-# OOOOOOO
+
+# # .......
+# # ...O.O.
+# # ...OO..
+# # ..OOOO.
+# # OOOOOOO
+# # OOOOOOO
 
 
 # 1 -> 그대로
