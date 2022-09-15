@@ -2,81 +2,45 @@
 
 
 def twoPluses(grid):
-    
-    answer = []
+    answer = 0
 
-    idx = 1
-
-    while True:
-
-        answer += check(idx, grid)
-
-        idx += 1
-
-        if (4 * idx - 3) > len(grid) * len(grid[0]):
-            break
-    print(answer)
-    answer = sorted(answer, reverse=True)
-    return answer[0] * answer[1]
-
-def check(idx, grid):
-    answer = []
-
-    start_i = idx - 1 
-    start_j = idx - 1
-
-    visited = []
+    # padding
+    temp = [["0"] * (len(grid) + 2)]
     for i in range(len(grid)):
-        visited.append([0] * len(grid[0]))
-
-    for i in range(start_i, len(grid) - start_i):
-        for j in range(start_j, len(grid[i]) - start_j):
-
-            if grid[i][j] == 'G':
-                flag = True
-                for k in range(1, idx):
-                    if i == 3 and j == 4:
-                        print(k, idx)
-                    if i + k > len(grid) - 1 or grid[i + k][j] == 'B' or visited[i + k][j] == 1:
-                        flag = False
-                        break
-
-                    if j + k > len(grid[0]) - 1 or grid[i][j + k] == 'B' or visited[i][j + k] == 1:
-                        flag = False
-                        break
-
-                    if i - k < 0 or grid[i - k][j] == 'B' or visited[i - k][j] == 1:
-                        flag = False
-                        break
-
-                    if j - k < 0 or grid[i][j - k] == 'B' or visited[i][j - k] == 1:
-                        flag = False
-                        break
-
-
-
-                if flag:
-                    visited[i + idx - 1][j] = 1
-                    visited[i][j + idx - 1] = 1
-                    visited[i - idx - 1][j] = 1
-                    visited[i][j - idx - 1] = 1
-                    visited[i][j] = 1
-                    answer.append(4 * idx - 3)
-                    break
-
-    return answer
+        temp.append( ['0'] + list(grid[i]) + ['0'] )
+    temp.append(["0"] * (len(grid) + 2))
     
+    for i in range(1, len(temp) - 1):
+        for j in range(1, len(temp[0]) - 1):
+            
+            r = 0
+            while temp[i + r][j] == "G" and temp[i - r][j] == "G" and temp[i][j + r] == "G" and temp[i][j - r] == "G":
+                temp[i + r][j] = temp[i - r][j] = temp[i][j + r] = temp[i][j - r] = "g"
+                for I in range(1, len(temp) - 1):
+                    for J in range(1, len(temp[0]) - 1):
+                        R = 0
 
-# print(twoPluses(['GGGGGG', 'GBBBGB', 'GGGGGG', 'GGBBGB', 'GGGGGG']))    # 5
-# print(twoPluses(['BGBBGB', 'GGGGGG', 'BGBBGB', 'GGGGGG', 'BGBBGB', 'BGBBGB']))    # 25
+                        while temp[I + R][J] == "G" and temp[I - R][J] == "G" and temp[I][J + R] == "G" and temp[I][J - R] == "G":
+                            answer = max(answer, (4 * r + 1) * (4 * R + 1) )
+                            R += 1
+                r += 1
 
-# print(twoPluses([
-# 'GGGGGGG',
-# 'BGBBBBG',
-# 'BGBBBBG',
-# 'GGGGGGG',
-# 'GGGGGGG',
-# 'BGBBBBG']))   
+            r=0
+            while temp[i + r][j] == "g" and temp[i - r][j] == "g" and temp[i][j + r] == "g" and temp[i][j - r] == "g":
+                temp[i + r][J] = temp[i - r][j] = temp[i][j + r] = temp[i][j - r] = "G"
+                r+=1
+    return answer
+
+print(twoPluses(['GGGGGG', 'GBBBGB', 'GGGGGG', 'GGBBGB', 'GGGGGG']))    # 5
+print(twoPluses(['BGBBGB', 'GGGGGG', 'BGBBGB', 'GGGGGG', 'BGBBGB', 'BGBBGB']))    # 25
+
+print(twoPluses([
+'GGGGGGG',
+'BGBBBBG',
+'BGBBBBG',
+'GGGGGGG',
+'GGGGGGG',
+'BGBBBBG']))   
 
 
 print(twoPluses(
