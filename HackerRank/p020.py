@@ -1,55 +1,54 @@
 # https://www.hackerrank.com/challenges/larrys-array/problem?isFullScreen=true
 
 def larrysArray(A):
-    real_answer = sorted(A)
-    # Write your code here
-    for i in range(len(A)):
 
-        if i >= len(A) - 2: break
-        
-        if A[i] != i + 1:
-            print(i, A)
-            res = rotate(A[i:i+3], i + 1)
-            
-            if res == -1: continue
-            if i + 3 <= len(A) - 1:
-                A = A[:i] + res + A[i+3:]
-            else:
-                A = A[:i] + res
+    answer = sorted(A)
+    pre_A = A
+    start_i = 0
 
-    if real_answer == A: return 'YES'
-    return 'NO'
+    while True:
+        for i in range(start_i, len(A) - 2):
+            if i + 1 != A[i]:
+                A = A[:i] + rotate(A[i:i+3]) + A[i+3:]
+
+        for i in range(len(A)):
+            if A[i] != i + 1:
+                start_i = i
+                break
+
+        if A == answer: return "YES"
+
+        if pre_A == A: break
+        pre_A = A.copy()
+
+    return "NO"
 
 
-def rotate(_list, i):
+def rotate(_list):
 
-    if i not in _list:
-        return -1
+    _min = min(_list)
 
-    answer = []
-    
-    for j in range(len(_list)):
-        if _list[j] == i:
-            
-            while True:
-                answer.append(_list[j])
-                j += 1
-                if j == i: break
-                if j == len(_list): j = 0
+    if _list[0] == _min: return _list
+    elif _list[1] == _min: return [_list[1], _list[2], _list[0]]
+    else: return [_list[2], _list[0], _list[1]]
 
-    return answer
 
-# print(larrysArray([3, 1, 2]))   # yes
-# print(larrysArray([1, 3, 4, 2]))   # yes
-# print(larrysArray([1, 2, 3, 5, 4]))   # no
+print(larrysArray([3, 1, 2]))   # yes
+print(larrysArray([1, 3, 4, 2]))   # yes
+print(larrysArray([1, 2, 3, 5, 4]))   # no
 
-# print(larrysArray([3, 1, 2, 4]))   # yes
-# print(larrysArray([1, 6, 5, 2, 3, 4]))   # no
+print(larrysArray([3, 1, 2, 4]))   # yes
+print(larrysArray([1, 6, 5, 2, 3, 4]))   # no
 print(larrysArray([1, 6, 5, 2, 4, 3]))   # yes
 
 
-# 1 2 6 5 3 4
-# 1 2 5 3 6 4
-# 1 2 3 6 5 4
-# 1 2 3 5 4 6
-# 1 2 3 4 6 5
+# print(larrysArray([263, 553, 326, 480, 536, 65, 796, 176, 597, 459, 71, 220, 10, 439, 756]))
+# 1 2 3 5 4
+# 1 2 3 5 4
+
+# 1 2 6 5 4 3
+# 1 2 4 6 5 3
+# 1 2 4 3 6 5
+
+# 1 2 3 6 4 5
+# 1 2 3 4 5 6
