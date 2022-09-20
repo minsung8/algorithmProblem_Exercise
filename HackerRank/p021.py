@@ -14,15 +14,21 @@ def almostSorted(arr):
     
     if len(cnt_list) == 2:
         print('yes')
-        print('swap ' + str(cnt_list[0] + 1) + ' ' + str(cnt_list[1] + 1))
-        return 
+        return 'swap ' + str(cnt_list[0] + 1) + ' ' + str(cnt_list[1] + 1)
     
     start_i = cnt_list[0]
     end_i = cnt_list[-1]
-    print(start_i, end_i)
-    temp_answer = arr[:start_i] + sorted(arr[start_i:end_i + 1]) + arr[end_i + 1:]
 
-    return temp_answer
+    temp = []
+    for i in range(start_i, end_i + 1):
+        temp.append(arr[i])
+
+    temp_answer = arr[:start_i] + list(reversed(temp)) + arr[end_i + 1:]
+
+    if temp_answer == answer:
+        print('yes')
+        return f'reverse {start_i + 1} {end_i + 1}'
+    return 'no'
 
 
 print(almostSorted([4, 2]))
