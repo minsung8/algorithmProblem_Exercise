@@ -4,28 +4,18 @@
 from collections import defaultdict
 
 def countSort(arr):
+
     # Write your code here
-    dic = defaultdict(list)
+    mid = int(len(arr) / 2)
+    for temp in arr[:mid]:
+        temp[1] = '-'
 
-    for i in range(len(arr)):
-        dic[int(arr[i][0])].append(arr[i][1])
+    arr = sorted(arr, key=lambda e: int(e[0]))
 
-    dic2 = defaultdict(list)
-
-    for i in range(len(arr)):
-        temp = []
-        for j in range(len(dic[i])):
-
-            if j == len(dic[i]) - 1:
-                temp.append(dic[i][j])
-            else:
-                temp.append('-')
-        dic2[i].append(temp)
-    print(dic2)
     answer = ''
-    for i in range(len(arr)):
-        answer += " ".join(dic2[i][0])
-        answer += ' '
+    for temp in arr:
+        answer += temp[1] + ' '
+        
     return answer
 
 
