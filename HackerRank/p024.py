@@ -1,61 +1,46 @@
 # https://www.hackerrank.com/challenges/lilys-homework/problem?isFullScreen=true
 
-from tempfile import tempdir
-from tkinter import W
-
 
 def lilysHomework(arr):
     # Write your code here
 
-    # front 
-    f_arr = arr.copy()
-    front_cnt = 0
-    front_answer = sorted(arr)
-    f_idx = 0
+    return min(work(arr, True), work(arr, False))
 
-    while True:
 
-        for i in range(len(f_arr)):
+def work(arr, flag):
 
-            if f_arr[i] == front_answer[f_idx]:
+    dic = {}
+    idx_dic = {}
+    answer = 0
 
-                if i == f_idx: break
-                else:
-                    temp = f_arr[f_idx]
-                    f_arr[f_idx] = f_arr[i]
-                    f_arr[i] = temp
-                    front_cnt += 1
-                    break
-        f_idx += 1
-                    
-        if f_idx == len(f_arr): break
+    for i in range(len(arr)):
+        dic[arr[i]] = i
+        idx_dic[i] = arr[i]
 
-    # back
-    b_arr = arr.copy()
-    back_cnt = 0
-    back_answer = sorted(arr, reverse=True)
-    b_idx = 0
+    if flag: front_arr = sorted(arr)
+    else: front_arr = sorted(arr, reverse=True)
 
-    while True:
+    for i in range(len(front_arr)):
 
-        for i in range(len(b_arr)):
+        if front_arr[i] != idx_dic[i]:
+            
+            temp_idx = dic[front_arr[i]]
 
-            if b_arr[i] == back_answer[b_idx]:
+            dic[front_arr[i]] = i
+            dic[idx_dic[i]] = temp_idx 
 
-                if i == b_idx: break
-                else:
-                    temp = b_arr[b_idx]
-                    b_arr[b_idx] = b_arr[i]
-                    b_arr[i] = temp
-                    back_cnt += 1
-                    break
-        b_idx += 1
-                    
-        if b_idx == len(b_arr): break
+            idx_dic[temp_idx] = idx_dic[i]
+            idx_dic[i] = front_arr[i]
+            answer += 1
 
-    return min(back_cnt, front_cnt)
+    return answer
 
 
 print(lilysHomework([2, 5, 3, 1]))  # 2
-print(lilysHomework([3, 4, 2, 5, 1]))    # 2
+print(lilysHomework([3, 4, 2, 5, 1]))   # 2
 
+
+# 1 5 3 2 
+
+# temp_idx = 3 
+# dic[3] = 
