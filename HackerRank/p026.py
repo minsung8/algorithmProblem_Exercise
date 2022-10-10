@@ -4,69 +4,53 @@
 def highestValuePalindrome(s, n, k):
     # Write your code here
 
-    dif_idx_list = []
+    s = list(s)
+    if n <= k: return '9' * n
 
-    if len(s) % 2 == 0:
-        front = list(s[:n // 2])
-        back = list(s[n // 2:][::-1])
-        mid = []
-    else:
-        front = list(s[:n // 2])
-        back = list(s[n // 2 + 1:][::-1])
-        mid = [s[n // 2]]
-
-    for i in range(len(front)):
-        if front[i] != back[i]:
-            dif_idx_list.append(i)
-
-    if len(dif_idx_list) > k: return '-1'
-
-    elif len(dif_idx_list) == k:
-        for i in range(len(dif_idx_list)):
-            _max = max(int(front[dif_idx_list[i]]), int(back[dif_idx_list[i]]))
-            front[dif_idx_list[i]] = str(_max)
-            back[dif_idx_list[i]] = str(_max)
-        
-        if not mid:
-            return "".join(front) + "".join(back[::-1])
+    mink = [0] * (n // 2 + 1)
+    for i in range(n//2-1,-1,-1):
+        if s[i] != s[n - 1 - i]:
+            mink[i]=mink[i + 1] + 1
         else:
-            return "".join(front) + mid[0] + "".join(back[::-1])
+            mink[i]=mink[i + 1]
 
-    else:
+    if mink[0] > k: return '-1'
+    
+    i = 0
+    while i < n//2 and k > mink[i]:
 
-        for i in range(len(dif_idx_list)):
+        if s[i]=='9':
+            if s[n - 1 - i] != '9':
+                s[n - 1 - i] = '9'
+                k -= 1
 
-            if len(dif_idx_list[i:]) < k:
-                if front[dif_idx_list[i]] != '9':
-                    front[dif_idx_list[i]] = '9'
-                    k -= 1
-                if back[dif_idx_list[i]] != '9':
-                    back[dif_idx_list[i]] = '9'
-                    k -= 1
+        elif s[n - 1 - i] == '9':
+            s[i] = '9'
+            k -= 1
+
+        elif k - 2 >= mink[i + 1]:
+            s[i] = s[n - 1 - i] = '9'
+            k -= 2
+
+        else:
+            if s[i]!=s[n-1-i]:
+                s[i]=s[n-1-i] = max(s[n-1-i],s[i])
+                k-=1
+        i += 1
+
+    if i<n//2:
+        for j in range(i,n//2):
+            if s[j]>s[n-1-j]:
+                s[n-1-j]=s[j]
             else:
-                _max = max(int(front[dif_idx_list[i]]), int(back[dif_idx_list[i]]))
-                front[dif_idx_list[i]] = str(_max)
-                back[dif_idx_list[i]] = str(_max)
-                k -= 1
-        
-        i = 0
-        while k > 1:
-            if i == len(front): break
+                s[j]=s[n-1-j]
+    elif n % 2:
+        if k>0:
+            s[n//2]='9'
 
-            if front[i] != '9':
-                front[i] = '9'
-                k -= 1
-            if back[i] != '9':
-                back[i] = '9'
-                k -= 1
+    return ''.join(s)
 
-            i += 1
-    if not mid:
-        return "".join(front) + "".join(back[::-1])
-    else:
-        if k > 0:
-            mid = ['9']
-        return "".join(front) + mid[0] + "".join(back[::-1])
+
 
 print(highestValuePalindrome('3943', 4, 1))   # 3993
 print(highestValuePalindrome('092282', 6, 3))   # 992299    
@@ -74,6 +58,7 @@ print(highestValuePalindrome('0011', 4, 1))   # -1
 print(highestValuePalindrome('072282', 6, 3))   # 992299    
 print(highestValuePalindrome('072272', 6, 3))   # 992299    
 
-print(highestValuePalindrome('351', 3, 1))
-# 292 282
-# 292 292 1
+print(highestValuePalindrome('777', 3, 0))
+print(highestValuePalindrome('77777', 3, 0))
+
+print(highestValuePalindrome('5', 1, 1))
