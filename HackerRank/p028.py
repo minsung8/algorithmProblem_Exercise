@@ -1,36 +1,23 @@
 # https://www.hackerrank.com/challenges/common-child/problem?isFullScreen=true
 
-
-from re import I
-
-
 def commonChild(s1, s2):
     # Write your code here
 
-    start_list = []
-    for i in range(len(s1)):
-        if s1[i] in s2:
-            start_list.append(i)
+    s1_len = len(s1)
+    s2_len = len(s2)
+    m = [[0 for _ in range(s2_len + 1)] for _ in range(s1_len + 1)]
 
-    answer_list = []
-    for i in start_list:    
-        temp_answer = ''
-        visited = [0] * len(s2)
 
-        for j in range(i, len(s1)):
+    for i in range(1, s1_len+1):
+        for j in range(1, s2_len+1):
             
-            for k in range(len(s2)):
-
-                if s1[j] == s2[k] and visited[k] == 0:
-                    temp_answer += s1[j]
-                    visited[k] = 1
-                    break
-
-        answer_list.append(temp_answer)
-    
-    return answer_list
+            if s1[i-1] == s2[j-1]:
+                m[i][j] =  m[i-1][j-1] + 1
+            else:
+                m[i][j] = max(m[i-1][j], m[i][j-1])
 
 
+    return m[-1][-1]
 
 
 
@@ -41,3 +28,7 @@ print(commonChild('HARRY', 'SALLY'))    # 2
 
 print(commonChild('AA', 'BB'))    # 0
 print(commonChild('OUDFRMYMAW', 'AWHYFCCMQX'))    # 2
+
+print(commonChild('ABCDEF', 'FBDAMN'))
+
+print(commonChild('WEWOUCUIDGCGTRMEZEPXZFEJWISRSBBSYXAYDFEJJDLEBVHHKS', 'FDAGCXGKCTKWNECHMRXZWMLRYUCOCZHJRRJBOAJOQJZZVUYXIC'))
