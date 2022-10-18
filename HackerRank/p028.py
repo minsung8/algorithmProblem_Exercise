@@ -1,22 +1,14 @@
 # https://www.hackerrank.com/challenges/common-child/problem?isFullScreen=true
 
 def commonChild(s1, s2):
-    s1_len = len(s1)
-    s2_len = len(s2)
-    m = [[0 for _ in range(s2_len + 1)] for _ in range(s1_len + 1)]
-
-    for i in range(1, s1_len+1):
-        for j in range(1, s2_len+1):
-            if s1[i-1] == s2[j-1]:
-                m[i][j] =  m[i-1][j-1] + 1
-            else:
-
-                if m[i-1][j] > m[i][j-1]:
-                    m[i][j] = m[i-1][j]
-                else:
-                    m[i][j] = m[i][j-1]
-
-    return m[-1][-1]
+    L = [0] * len(s2)
+    for c in s1:
+        p = 0
+        L = [
+            p := (q+1 if c==d else r if p < r else p)
+            for d, q, r in zip(s2, [0]+L, L)
+        ]
+    return L[-1]
 
 
 print(commonChild('SHINCHAN', 'NOHARAAA'))    # 3   NHA
@@ -31,4 +23,11 @@ print(commonChild('SHINCHAN', 'NOHARAAA'))    # 3   NHA
 
 # print(commonChild('WEWOUCUIDGCGTRMEZEPXZFEJWISRSBBSYXAYDFEJJDLEBVHHKS', 'FDAGCXGKCTKWNECHMRXZWMLRYUCOCZHJRRJBOAJOQJZZVUYXIC'))
 
-# HNH
+# # SHINCHAN
+# NOHARAAA
+
+# S 0000 0000
+# N 0011 1111
+#  
+#  NNNNNNNN
+# 
